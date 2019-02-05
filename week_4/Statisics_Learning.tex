@@ -109,4 +109,74 @@ Therefore, we have
 That is , we choose 
 \[m  \geq \frac{\log(2|\mathcal{H}|/\delta)}{2\varepsilon^2}\]
 \end{frame}
+\section{The No free lunch theorem}
+\begin{frame}{No Free Lunch Theorem}
+	Question: Does there exists the universal learner? \\ 
+	The answer to this question is negative!! 
+\end{frame}
+\begin{frame}{No Free Lunch Theorem}
+	\begin{thm}
+		Let $A$ be any learning algorithm for the task of binary classification with respect to the $0-1$ loss over a domain $X$. Let $m$ be any number smaller than $|X|/2$, representing a training set size. Then, there exists a distribution $\mathcal{D}$ over $X \times \{0,1\}$ such that:
+		\begin{enumerate}
+			\item There exists a function $f: X \rightarrow \{0,1\}$ with $L_{\mathcal{D}}(f)=0$
+			\item With probability of at least $1/7$ over the choice of $S \sim \mathcal{D}^m$ we have that $L_{\mathcal{D}}(A(S)) \geq 1/8$
+		\end{enumerate}
+	\end{thm}
+\end{frame}
+\begin{frame}{No Free Lunch Theorem}
+	This theorem states that for every learner, there exists a task on which it fails, even though that task can be successfully learned by another learner.
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	Let $C$ be a subset of $X$ of size $2m$. \\
+	The main idea of proof is that any learning algorithm that observes only half of the instances in $C$ has no information on what should be the labels of the rest of the instances in $C$ has no information on what should be the labels of the rest of instances in $C$. \\ 
+	Note that there are $T=2^{2m}$ possible functions from $C$ to $\{0,1\}$. Denote these functions by $f_1,\cdots,f_T$.
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	Let $\mathcal{D}_i$ be a distribution over $C \times \{0,1\}$ defined by
+	\[\mathcal{D}_i(\{x,y\}) = \begin{cases}
+			1/|C| \quad if \ \ y=f_i(x) \\
+			0 \quad otherwise
+	\end{cases}\]
+	That is, the distribution make $f_i$ as a correct label function. \\
+	We will show that for every algorithm, $A$, that receives a training set of $m$ examples from $C \times \{0,1\}$ and returns a function $A(S): C \rightarrow \{0,1\}$, it holds that 
+\[\max_{i \in [T]} E_{S \sim \mathcal{D}^m_i} [L_{\mathcal{D}_i} A(S))] \geq 1/4\]
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	To prove the above claim, note that there are $k = (2m)^m$ possible sequence of $m$ examples from $C$. Denote these sequence by $S_1, \cdots, S_k$. \\
+	If $S_j = (x_1, \cdots, x_m)$ then we denote 
+	\[S_j^i = ((x_1,f_i(x_1)), \cdots, (x_m,f(x_m)) )\]
+Then we can write the $E_{S \sim \mathcal{D}^m_i} [L_{\mathcal{D}_i} A(S))]$ as 
+\[E_{S \sim \mathcal{D}^m_i} [L_{\mathcal{D}_i} A(S))] = \frac{1}{k} \sum^k_{j=1} L_{\mathcal{D}_i} (A(S^i_j))\]
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	\[\max_{i \in [T]} \frac{1}{k} \sum^k_{i=1} L_{\mathcal{D}_i} (A(S^i_j)) \geq \frac{1}{T} \frac{1}{k} \sum^k_{i=1} L_{\mathcal{D}_i} (A(S^i_j))\]
+	\[= \frac{1}{k} \sum^k_{j=1} \frac{1}{T} \sum^T_{i=1} L_{\mathcal{D}_i} (A(S^i_j))\]
+	\[\geq \min_{j \in [k]} \frac{1}{T} \sum^T_{i=1} L_{\mathcal{D}_i}(A(S_j^i))\]
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	Next fix $j \in [k]$ and let $v_1 \cdots v_p$ be the examples in $C$ that do not appear in $S_j$. Therefore, for every function $h:C \rightarrow \{0,1\}$ we have 
+\[L_{\mathcal{D}_i} = \frac{1}{2m} \sum_{x \in C} I_{[h(x) \neq f_i(x)]}\]
+\[\geq \frac{1}{2m} \sum^p_{r=1} I_{[h(v_r) \neq f_i(v_r)]}\]
+\[\geq \frac{1}{2p} \sum^p_{r=1} I_{[h(v_r) \neq f_i(v_r)]}\]
+\end{frame}
+\begin{frame}
+Hence 
+\[\frac{1}{T} \sum^T_{i=1} L_{\mathcal{D}_i}(A(S_j^i)) \geq \frac{1}{T} \sum^T_{i=1}  \frac{1}{2p} \sum^p_{r=1} I_{[A(S^i_j)(v_r) \neq f_i(v_r)]}\]
+\[= \frac{1}{2p} \sum^p_{r=1} \frac{1}{T} \sum^T_{i=1} I_{[A(S^i_j)(v_r) \neq f_i(v_r)]}\]
+\[\geq \frac{1}{2} \min_{r \in [p]} \frac{1}{T} \sum^T_{i=1} I_{[A(S^i_j)(v_r) \neq f_i(v_r)]}\]
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	Next, fix some $r \in [p]$, we can partition all the functions in $f_1, \cdots, f_T$ into $T/2$ disjoint paris, where for a pair $(f_i,f_{i'})$ we have that for every $c \in C$, $f_i(c) \neq f_{i'}(c)$ if and only if $c = v_r$. \\
+	Therefore
+	\[ I_{[A(S^i_j)(v_r) \neq f_i(v_r)]} +  I_{[A(S^i_j)(v_r) \neq f_{i'}(v_r)]} = 1\]
+	which yield
+	\[\frac{1}{T} \sum^T_{i=1}  I_{[A(S^i_j)(v_r) \neq f_i(v_r)]} = \frac{1}{2}\]
+\end{frame}
+\begin{frame}{No Free Lunch Theorem:Proof}
+	Clearly, this means that there exist a function $f:X \rightarrow \{0,1\}$ and a distribution $\mathcal{D}$ such that 
+	\[E_{S \sim \mathcal{D}^m} [L_{\mathcal{D}} (A(S))] \geq 1/4\]
+	By Markov ineqality
+	\[Pr[L_{\mathcal{D}} (A(S)) \geq 1/8] \geq \frac{1/4 - 1/8}{7/8} = \frac{1}{7} \]
+	
+\end{frame}
 \end{document}
