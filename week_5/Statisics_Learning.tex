@@ -1,0 +1,82 @@
+\documentclass{beamer}
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\newtheorem*{dfn}{Definition}
+\newtheorem{thm}{Theorem}[subsection]
+ \renewcommand{\thethm}{\arabic{thm}}
+%\newtheorem{lemma}{Lemma}
+\title[Introduction]{Statistics Learning Theory:VC-Dimension}
+\author{}
+\institute{}
+\date{2019.02.16}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+
+\section{VC-Dimension}
+\begin{frame}{Motivation:Infinite-Size Classes}
+	In the last week, we prove that finite classes are learnable. However, the infinite size classes may be learnable. Consider the following example.
+\end{frame}
+\begin{frame}{Motivation:Example}
+	Let $\mathcal{H}$ be the set of threshold functions over the real line, namely, $\{h_a:a \in R\}$, where $h_a(x) = I_{[x<a]}$. Then $\mathcal{H}$ is infinite, however it can be proved is learnable in the PAC model using the ERM algorithm.
+\end{frame}
+\begin{frame}{VC-Dimension}
+	The natural question arises: what is the sufficient conditions for learnability? \\
+	Answer: VC-dimension
+\end{frame}
+\begin{frame}{VC-dimension}
+	\begin{dfn}[Restriction of $\mathcal{H}$ to C]
+		Let $\mathcal{H}$ be a class of functions from $X$ to $\{0,1\}$ and let $C = \{c_1,\cdots,c_m\} \subset X$. The restriction of $\mathcal{H}$ to $C$ is the set of functions from $C$ to $\{0,1\}$ that can be derived from $\mathcal{H}$. That is, 
+	\[\mathcal{H}_C = \{h(c_1), \cdots, h(c_m)): h \in \mathcal{H}\}\]
+	\end{dfn}
+	\begin{dfn}[Shattering]
+	A hypothesis class $\mathcal{H}$ shatters a finite set $C \subset X$ if the restriction of $\mathcal{H}$ to $C$ is the set of all functions from $C$ to $\{0,1\}$. That is, $|\mathcal{H}_C| = 2^{|C|}$
+	\end{dfn}
+\end{frame}
+\begin{frame}{VC-dimension}
+	\begin{dfn}[VC-dimension]
+		The VC-dimension of a hypothesis class $\mathcal{H}$, denoted VCdim($\mathcal{H}$), is the maximalsize of a set $C \subset X$ that can be shattered by $\mathcal{H}$. If $\mathcal{H}$ can shatter sets of arbitraily large size we say that $\mathcal{H}$ has infinite VC-dimension.
+	\end{dfn}
+\end{frame}
+\begin{frame}{VC-dimension:Examples}
+	To show that $VCdim(\mathcal{H})=d$ we need to show that 
+	\begin{enumerate}
+		\item There exists a set $C$ of size $d$ that is shattered  by $\mathcal{H}$
+		\item Every set $C$ of size $d+1$ is not shattered by $\mathcal{H}$
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Examples:Threshold Functions}
+	$C=\{c_1\}$, $\mathcal{H}$ shatters $C$, therefore, $VCdim(\mathcal{H}) \geq 1$. If an arbitrary set $C = \{c_1,c_2\}$ where $c_1 \leq c_2$, $\mathcal{H}$ does not shatter $C$.
+\end{frame}
+\begin{frame}{Examples:Intervals}
+	Let $\mathcal{H}$ be the class of intervals over $R$, namely, $\mathcal{H} = \{h_{a,b}:a,b \in R,a<b\}$, where
+\end{frame}
+\begin{frame}{The Fundamental Theorem of PAC learning}
+\end{frame}
+\begin{frame}{Sauer's Lemma and the Growth Function}
+\end{frame}
+\end{document}
