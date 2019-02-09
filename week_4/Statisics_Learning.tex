@@ -21,7 +21,7 @@
 \newtheorem{thm}{Theorem}[subsection]
  \renewcommand{\thethm}{\arabic{thm}}
 %\newtheorem{lemma}{Lemma}
-\title[Introduction]{Statistics Learning Theorem:General PAC model with finite class}
+\title[Introduction]{Statistics Learning Theory:Finite class and No Free Lunch Theorem}
 \author{}
 \institute{}
 \date{2019.02.09}
@@ -155,7 +155,7 @@ Then we can write the $E_{S \sim \mathcal{D}^m_i} [L_{\mathcal{D}_i} A(S))]$ as
 \end{frame}
 \begin{frame}{No Free Lunch Theorem:Proof}
 	Next fix $j \in [k]$ and let $v_1 \cdots v_p$ be the examples in $C$ that do not appear in $S_j$. Therefore, for every function $h:C \rightarrow \{0,1\}$ we have 
-\[L_{\mathcal{D}_i} = \frac{1}{2m} \sum_{x \in C} I_{[h(x) \neq f_i(x)]}\]
+	\[L_{\mathcal{D}_i}(h) = \frac{1}{2m} \sum_{x \in C} I_{[h(x) \neq f_i(x)]}\]
 \[\geq \frac{1}{2m} \sum^p_{r=1} I_{[h(v_r) \neq f_i(v_r)]}\]
 \[\geq \frac{1}{2p} \sum^p_{r=1} I_{[h(v_r) \neq f_i(v_r)]}\]
 \end{frame}
