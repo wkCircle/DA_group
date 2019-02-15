@@ -17,11 +17,13 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[ruled,longend]{algorithm2e}
 \newtheorem*{dfn}{Definition}
 \newtheorem{thm}{Theorem}[subsection]
- \renewcommand{\thethm}{\arabic{thm}}
+\renewcommand{\thethm}{\arabic{thm}}
+
 %\newtheorem{lemma}{Lemma}
-\title[Introduction]{Statistics Learning Theory:VC-Dimension}
+\title[Introduction]{Statistics Learning Theory:VC-Dimension and Linear Predictor}
 \author{}
 \institute{}
 \date{2019.02.16}
@@ -38,6 +40,13 @@
 %\end{frame}
 
 \section{VC-Dimension}
+\begin{frame}{Introduction}
+	In today's slide, we aim to introduce the followings:
+	\begin{enumerate}
+		\item VC-dimension and the fundamental theorem of PAC learning(The proof will be introduced in the nex week)
+		\item Linear predictor and their VC-dimension
+	\end{enumerate}
+\end{frame}
 \begin{frame}{Motivation:Infinite-Size Classes}
 	In the last week, we prove that finite classes are learnable. However, the infinite size classes may be learnable. Consider the following example.
 \end{frame}
@@ -76,7 +85,151 @@
 	Let $\mathcal{H}$ be the class of intervals over $R$, namely, $\mathcal{H} = \{h_{a,b}:a,b \in R,a<b\}$, where
 \end{frame}
 \begin{frame}{The Fundamental Theorem of PAC learning}
+	\begin{thm}[The Fundamental Theorem of Statistical Learning]
+		Let $\mathcal{H}$ be a hypothesis class of functions from a domain $X$ to $\{0,1\}$ and let the loss function be the 0-1 loss. Then, the following are equivalent:
+		\begin{enumerate}
+			\item $\mathcal{H}$ has the uniform convergence property
+			\item Any ERM rule is a successful agnostic PAC learner for $\mathcal{H}$
+			\item $\mathcal{H}$ is agnostic PAC learnable
+			\item $\mathcal{H}$ is PAC learnable
+			\item Any ERM rule is a successful PAC learner for $\mathcal{H}$
+			\item $\mathcal{H}$ has a finite VC-dimension
+		\end{enumerate}
+	\end{thm}
 \end{frame}
-\begin{frame}{Sauer's Lemma and the Growth Function}
+\section{Linear Predictor}
+
+\begin{frame}{Linear predictor}
+	The basic idea of linear predictor is to use the linear function to predict the target.
+	\begin{enumerate}
+			\item Classification: Logistic Regression
+			\item Regression: Linear regression
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Linear predictor:hypothesis classes}
+	\[L_d\{h_{w,b}: w \in R^d,b \in R\}\]
+	where
+	\[h_{w,b}(x) = \langle w,x \rangle +b = (\sum^d_{i=1} w_i x_i) + b\]
+	\[HS_d = sign \circ L_d = \{sign(h_{w,b}(x)):h_{w,b} \in L_d\}\]
+\end{frame}
+\begin{frame}{Linear predictor:implementation of ERM rule}
+	\begin{enumerate}
+		\item In the realizable case (PAC case), ERM rule can be solved efficient
+		\item In the agnostic case, implementing the ERM rule is computationally hard(Ben-David \&\ Simon 2001)
+		\item Due to the computation difficulty, the Logistic regression uses the surrogate loss function to learn a halfspace that does not necessarily minimize the empirical risk with the 0-1 loss. 
+		\item In the following, we will introduce the two way to implement the ERM rule(relizable case), and prove the learnability of the algorithm.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Implementation of ERM rule: Linear Programming}
+	Linear programs(LP) are problems that can be expressed as maximizing a linear function subject to linear inequalities. That is,
+	\[\max_{w \in R^d} \langle u,w \rangle \]
+	subject to
+	\[Aw \geq v\]
+	Linear programs can be solved efficiently, we will show that the ERM problem for halfspace in the relizable case can be expressed as a linear program.
+\end{frame}
+\begin{frame}{Implementation of ERM rule: Linear Programming}
+	Let $S = \{(x_i,y_i)\}^m_{i=1}$ be a training set of size $m$. \\
+	Since we assume the realizable case, an ERM predictor should have zero errors on the training set. That is we are looking some vector $w \in R^d$ for which
+	\[sign(\langle w,x \rangle) = y_i\]
+	Equivalently
+	\[y_i \langle w,x \rangle > 0\]
+\end{frame}
+\begin{frame}{Implementation of ERM rule: Linear Programming}
+	Let $w^*$ be a vector that satisfies this condition(existence is ensured by realizability assumption). Define $\gamma = \min_i (y_i \langle w^*,x_i \rangle)$ and $\bar{w} = \frac{w^*}{\gamma}$, then we have
+	\[y_i \langle \bar{w}, x_i \rangle = \frac{1}{\gamma} y_i \langle w^*,x_i \rangle \geq 1\]
+	Therefore, there exists a vector that satisfies 
+	\begin{align}
+		y_i \langle w,x_i \rangle \geq 1 \label{eq:1} 
+	\end{align}
+	and clearly, such a vector is an ERM predictor.
+\end{frame}
+\begin{frame}{Implementation of ERM rule: Linear Programming}
+	To find a vector that satisfies equation \ref{eq:1} we can rely on an LP solver as follows. Set $A$ to be the $m \times d$ matrix whose rows are the instances multiplied by $y_i$. That is, $A_{i,j} = y_ix_{i,j}$. Let $v$ be the vector $(1, \cdots,1) in R^m$. Then the equation \ref{eq:1} can be rewritten as 
+	\[ Aw = 
+	\begin{bmatrix}
+		y_1 x_{1,1} & y_1 x_{1,2} & \cdots & y_1 x_{1,d} \\
+		\vdots , & \vdots & \vdots & \vdots \\
+		y_m x_{m,1} & y_m x_{m,2} & \cdots & y_m x_{m,d}
+	\end{bmatrix}
+	\begin{bmatrix}
+		w_1 \\
+		\vdots \\
+		w_d	
+	\end{bmatrix}
+	\geq 
+	\begin{bmatrix}
+		1 \\
+		\vdots \\
+		1
+	\end{bmatrix}
+	=v
+\]
+The LP form requires a maximization objective yet all the $w$ that satisfy the constraints are equal candidates as output hypothesis. Thus, we set a dummy objective, $u = (0,\cdots,0) \in R^d$
+\end{frame}
+
+\begin{frame}{Implementation of ERM rule: Batch Preception}
+  \begin{algorithm}[H]
+	  $Input: \gets \text{A training set} (x_1,y_1),\cdots (x_m,y_m)$\;
+	  $Initialize: \gets w^{(1)} = (0,0,\cdots,0)$\;
+	\While{$\exists i \ \ s.t. \ \ y_i \langle w^{(t)},x_i \rangle \leq 0  $}
+	{
+		$w^{(t+1)} = w^{(t)} + y_ix_i$\;
+	}
+	$Output: w^{(t)}$
+  
+  \caption{Batch Perceptron}
+\end{algorithm}
+\end{frame}
+\begin{frame}{Implementation of ERM rule: Batch Preception}
+\begin{thm}
+	Assume that $(x_1,y_1), \cdots ,(x_m,y_m)$ is separable, let $B= \min \{|w|: \forall i \in [m], \ \ y_i \langle w,x_i \rangle \geq 1\}$ and let $R = \max_i |x_i|$. Then, the Preceptron algorithm stops after at most $(RB)^2$ iterations, and when it stops it holds that $\forall i \in [m], y_i \langle w^{(t)},x_i \rangle >0$
+\end{thm}
+\end{frame}
+\begin{frame}{Batch Preception:proof}
+	By the definition of the stopping condition, if the Perceptron stops it must have separated all the examples. We will show that if the Perceptron runs for $T$ iterations, then we must have $T \leq (RB)^2$.\\
+	Let $w^*$ be a vector that achieves the minimum in the definition of $B$. That is,$y_i \langle w^*,x_i \rangle \geq 1$ for all $i$, and among all vectors that satisfy these constraints, $w^*$ is of minimal norm.
+\end{frame}
+\begin{frame}{Batch Preception:proof}
+	We claim that
+	\[\frac{\langle w^*, w^{(T+1)} \rangle}{|w^*| |w^{(T+1)}|} \geq \frac{\sqrt{T}}{RB}\]
+	by Cauchy-Schwartz inequality, it will imply that  
+	\[1 \geq  \frac{\sqrt{T}}{RB}\]	
+	hence
+	\[T \leq (RB)^2\]
+	Therefore, we focus on proving the above inequality.
+
+\end{frame}
+\begin{frame}{Batch Preception:proof}
+	We first show that $\langle w^*,w^{(T+1)} \rangle \geq T$. \\ 
+	For $t=1$, $w^{(1)} = (0, \cdots,0)$ holds, suppose that on iteration $t$, we have that 
+	\[\langle w^*,w^{(t+1)} \rangle - \langle w^*, w^{(t)} \rangle = \langle w^*,w^{(t+1)} - w^{(t)} \rangle\]
+	\[= \langle w^*,y_ix_i \rangle = y_i \langle w^*,x_i \rangle\]
+	\[\geq 1\]
+	Therefore, after $T$ iterations, we get	
+	\begin{align}
+		\langle w^*,w^{(T+1)} \rangle = \sum^T_{t=1} (\langle w^*,w^{(t+1)} \rangle - \langle w^*,w^{(t)} \rangle) \geq T \label{eq:2}
+\end{align}
+\end{frame}
+\begin{frame}{Batch Preception:proof}
+	Next, we upper bound $|w^{(T+1)}|$
+	\[|w^{(T+1)}|^2 = |w^{(t)} + y_ix_i|^2\]
+	\[|w^{(t)}|^2 + 2y_i \langle w^{(t)}, x_i \rangle + y^2_i |x_i|^2\]
+	\[|w^{(t)}|^2 + R^2\]
+	Using above recursively for $T$ iterations, we obtain that
+	\begin{align}
+		|w^{(T+1)}|^2 \leq TR^2 \rightarrow |w^{(T+1)}| \leq \sqrt{T} R \label{eq:3}
+	\end{align}
+\end{frame}
+\begin{frame}{Batch Preception:proof}
+	Combining equation \ref{eq:2} with equation \ref{eq:3}, we have that 
+	\[\frac{\langle w^*, w^{(T+1)} \rangle}{|w^*| |w^{(T+1)}|} \geq \frac{T}{B \sqrt{T} R} = \frac{\sqrt{T}}{BR}\]
+\end{frame}
+\begin{frame}{Halfspace:VC-dimension}
+	\begin{thm}
+		The VC-dimension of the class of homogenous halfspace  in $R^d$ is $d$
+	\end{thm}
+	\begin{thm}
+		The VC-dimension of the class of nonhomogenous halfspace in $R^d$ is $d+1$
+	\end{thm}
 \end{frame}
 \end{document}
