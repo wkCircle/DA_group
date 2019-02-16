@@ -71,6 +71,13 @@
 		The VC-dimension of a hypothesis class $\mathcal{H}$, denoted VCdim($\mathcal{H}$), is the maximalsize of a set $C \subset X$ that can be shattered by $\mathcal{H}$. If $\mathcal{H}$ can shatter sets of arbitraily large size we say that $\mathcal{H}$ has infinite VC-dimension.
 	\end{dfn}
 \end{frame}
+\begin{frame}{VC-dimension:No Free Lunch Theorm}
+	By No Free Lunch Theorem, given a training sample $S$ with size $m$, if there exists a shattered set of size $2m$, then we can find a distribution $\mathcal{D}$ such that $L_{\mathcal{D}} (A(S)) \geq 1/8$ with probability at least $1/7$\\
+	Therefore, we have the following theorem
+	\begin{thm}
+		Let $\mathcal{H}$ be a class of infinite VC-dimension. Then, $\mathcal{H}$ is not PAC learnable
+	\end{thm}
+\end{frame}
 \begin{frame}{VC-dimension:Examples}
 	To show that $VCdim(\mathcal{H})=d$ we need to show that 
 	\begin{enumerate}
@@ -79,10 +86,14 @@
 	\end{enumerate}
 \end{frame}
 \begin{frame}{Examples:Threshold Functions}
-	$C=\{c_1\}$, $\mathcal{H}$ shatters $C$, therefore, $VCdim(\mathcal{H}) \geq 1$. If an arbitrary set $C = \{c_1,c_2\}$ where $c_1 \leq c_2$, $\mathcal{H}$ does not shatter $C$.
+	$C=\{c_1\}$, $\mathcal{H}$ shatters $C$, therefore, $VCdim(\mathcal{H}) \geq 1$. If an arbitrary set $C = \{c_1,c_2\}$ where $c_1 \leq c_2$, $\mathcal{H}$ does not shatter $C$. $VCdim(\mathcal{H})=1$
 \end{frame}
 \begin{frame}{Examples:Intervals}
-	Let $\mathcal{H}$ be the class of intervals over $R$, namely, $\mathcal{H} = \{h_{a,b}:a,b \in R,a<b\}$, where
+	Let $\mathcal{H}$ be the class of intervals over $R$, namely, $\mathcal{H} = \{h_{a,b}:a,b \in R,a<b\}$, where $h_{a,b}:R \rightarrow \{0,1\}$ is a function such that $h_{a,b}(x) = 1_{x \in (a,b)}$. If $C = \{1,2\}$. Then $\mathcal{H}$ shatters $C$ and therefore $VCdim(\mathcal{H}) \geq 2$. However $C = \{c_1,c_2,c_3\}$. The labeling $(1,0,1)$ cannot be obtained. $VCdim(\mathcal{H})=2$.
+\end{frame}
+\begin{frame}{Eamples: Finite case}
+	Let $\mathcal{H}$ be finite case, then for any set $C$, we have $|\mathcal{H}_C| \leq |\mathcal{H}|$ \\
+	Thus, $C$ cannot be shattered if $|\mathcal{H}| < 2^{|C|}$, hence, $VCdim(\mathcal{H}) \leq \log_2(|\mathcal{H}|)$
 \end{frame}
 \begin{frame}{The Fundamental Theorem of PAC learning}
 	\begin{thm}[The Fundamental Theorem of Statistical Learning]
@@ -96,6 +107,7 @@
 			\item $\mathcal{H}$ has a finite VC-dimension
 		\end{enumerate}
 	\end{thm}
+Remark:Reminding the quantitative Version, the proof idea:the growth rate of $\mathcal{H}_C$ is ploynomial, by Hoeffding's inequality, the converge rate is exponentially with $|C|$
 \end{frame}
 \section{Linear Predictor}
 
