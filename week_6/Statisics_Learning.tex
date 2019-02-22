@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass{beamer} 
 %
 % Choose how your presentation looks.
 %
@@ -17,11 +17,12 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[ruled,longend]{algorithm2e}
 \newtheorem*{dfn}{Definition}
 \newtheorem{thm}{Theorem}[subsection]
  \renewcommand{\thethm}{\arabic{thm}}
 %\newtheorem{lemma}{Lemma}
-\title[Introduction]{Statistics Learning Theory:Logistic Regression}
+\title[Introduction]{Statistics Learning Theory:Logistic Regression I computational aspect}
 \author{}
 \institute{}
 \date{2019.02.23}
@@ -61,6 +62,7 @@
 	\begin{enumerate}
 		\item logistic loss function is convex function, the optimization can be solved efficienyly
 		\item The ERM problem associated with logistic regress is identical to the problem of finding a maximimum Likelihood Estimator.
+		\item One of the efficient algorithm is stochastic gradient descent
 	\end{enumerate}
 \end{frame}
 \begin{frame}
@@ -68,5 +70,80 @@
 		 % Your image included here
 		 \includegraphics[width=\textwidth]{Sigmoid.png}
 	\end{block}
+\end{frame}
+\begin{frame}{Gradient Descent:Motivation}
+	The Taylor approximation tells us that 
+	\[f(u) \approx f(w) + \langle u-w,\nabla f(w) \rangle \]
+	Therefore, given the point $w^{(t)}$, we can update the the next point by minimizing the approximation of $f(u)$, however, when $u$ is far away from $w^{t}$, the approximation might become loose. Hence, we jointly minimize the distance between $u$ and $w^{(t)}$ and approximation around $w^{(t)}$. That is
+	\[w^{(t+1)} = arg\min_{u} \frac{1}{2} |u-w^{(t)}|^2 + \eta(f(w^{(t)}) + \langle u - w^{(t)}, \nabla f(w^{(t)}) \rangle)\]
+\end{frame}
+\begin{frame}{Gradient Gescent:Motivation}
+	Taking the derivative with respect to $u$, we can obtain the following:
+	\[w^{(t+1)} = w^{(t)} - \eta \nabla f(w^{(t)})\]
+	The algorithm will update the value in the direction of the greatest rate of increase of $f$ around $w^{(t)}$, $\eta $ can be thought as learning rate, the rate we believe the approximation part.
+\end{frame}
+\begin{frame}{Analysis of GD for Convex-Lipschitz Functions}
+	In the GD algorithm, we assume the output is $\bar{w} = \frac{1}{T} \sum^T_{t=1} w^{(t)}$ and denote $w^*$ as the minimizer of $f(w)$. By the convexity and the definition of $\bar{w}$, we have 
+\[f(\bar{w}) - f(w^*) = f(\frac{1}{T} \sum^T_{t=1} w^{(t)}) - f(w^*)\]
+	\[	\leq \frac{1}{T} \sum^T_{t=1} (f(w^{(t)}) - f(w^*)\]
+		\[= \frac{1}{T} \sum^T_{t=1} (f(w^{(t)}) - f(w^*)) \]
+		because of the convexity of $f$, we have that 	
+		\[f(w^{(t)}) - f(w^*) \leq \langle w^{(t)} - w^*, \nabla f(w^{(t)}) \rangle\]
+Therefore
+\[f(\bar{w}) - f(w^*) \leq \frac{1}{T} \sum^T_{t=1} \langle w^{(t)} - w^*, \nabla f(w^{(t)}) \rangle\]
+\end{frame}
+\begin{frame}{Analysis of GD for Convex-Lipschitz Functions}
+	To estimate the converge rate of GD algorithm, we claim the following lemma
+	\begin{thm}
+		Let $v_1, \cdots,v_T$ be an arbitrary sequence of vectors. Any algorithm with an initialization $w^{(1)}=0$ and an update rule of the form
+		\[w^{(t+1)} = w^{(t)} - \eta v_t\]
+		satisfies
+\[\sum^T_{t=1} \langle w^{(t)} - w^*, v_t \rangle \leq \frac{|w^*|^2}{2 \eta} + \frac{\eta}{2} \sum^T_{t=1} |v_t|^2\]
+In particular, if $|v_t| \leq \rho$ and $|w^*| \leq B$ then we set $\eta = \sqrt{\frac{B^2}{\rho^2 T}}$ then
+\[\frac{1}{T} \sum^T_{t=1} \langle w^{(t)} - w^*,v_t \rangle \leq \frac{B \rho}{\sqrt{T}}\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Analysis of GD for Convex-Lipschitz Functions}
+	Using albegraic manipulations, we have 
+	\[\langle w^{(t)} - w^*,v_t \rangle = \frac{1}{\eta} \langle w^{(t)} - w^*, \eta v_t \rangle\]
+	\[= \frac{1}{2 \eta} (-|w^{(t)} - w^* - \eta v_t |^2 + |w^{(t)} - w^*|^2 + \eta^2 |v_t|^2)\]
+	\[= \frac{1}{2\eta} ( - |w^{(t+1)} - w^*|^2 + |w^{(t)} - w^*|^2) + \frac{\eta}{2} |v_t|^2\]
+	Summing the equality over $t$, we have 
+	\[\sum^T_{t=1} \langle w^{(t)} - w^*,v_t \rangle = \frac{1}{2 \eta} \sum^T_{t=1} ( - |w^{(t+1)} - w^*|^2 + |w^{(t)} - w^*|^2) + \frac{\eta}{2} |v_t|^2\]
+\end{frame}
+\begin{frame}{Analysis of GD for Convex-Lipschitz Functions}
+The first part is a telescopic sum equal to 
+\[|w^{(1)} - w^*|^2 - |w^{(T+1)} - w^*|^2\]
+Therefore
+\[sum^T_{t=1} \langle w^{(t)} - w^*,v_t \rangle = \frac{1}{2 \eta} (|w^{(1)} - w^*|^2 - |w^{(T+1)} - w^*|^2) + \frac{\eta}{2} \sum^T_{t=1} |v_t|^2\]
+\[\leq \frac{1}{2 \eta} |w^{(1)} - w^*|^2 + \frac{\eta}{2} \sum^T_{t=1} |v_t|^2\]
+\[= \frac{1}{2 \eta} |w^*|^2 + \frac{\eta}{2} \sum^T_{t=1} |v_t|^2\]
+\end{frame}
+\begin{frame}{Gereralized:Subgradients}
+	We want to generalize to non-differentable functions. To do this, we use subgradients instead. Here, we recall the definition of subgradient.
+	\begin{dfn}
+		A vector $v$ that satisfies 
+		\[\forall u \in S, \ \ f(u) \geq f(w) + \langle u-w,v \rangle\]
+		is called a subgradient of $f$ at w. The set of subgradients of $f$ at w is called  the differential set and denoted $\partial f(w)$. Note that if $f$ is convex, such v must exist.
+	\end{dfn}
+\end{frame}
+\begin{frame}{Stochastic Gradient Descent}
+	\begin{algorithm}[H]
+		$Input: \gets \text{Scalar} \ \  \eta>0, \text{integer} T>0$ \;
+		$Initialize: \gets w^{(1)} = (0,0,\cdots,0)$\;
+		\For{$t = 1,2, \cdots T$}
+		{    choose $v_t$ at random from a distribution such that $E[v_t|w^{(t)}] \in \partial f(w^{(t)})$
+			\\
+			 update			$w^{(t+1)} = w^{(t)} - \eta v_t$\;
+							}
+	$Output: \bar{w} = \frac{1}{T} \sum^{T}_{t=1} w^{(t)}$
+	\caption{Stochastic Gradient Descent(SGD)}
+	\end{algorithm}
+\end{frame}
+\begin{frame}{Stochastic Gradient Descent:theorem}
+	\begin{thm}	
+		Let $B,\rho>0$. Let $f$ be a convex function and let $w^* \in arg\min_{w:|w| \leq B} f(w)$. Assume that SGD is run for $T$ iterations with $\eta = \sqrt{\frac{B^2}{\rho^2 T}}$. Assume also that for all $t$, $|v_t| \leq \rho$ with probability 1. Then,
+		\[E[f(\bar{w})] - f(w^*) \leq \frac{b \rho}{\sqrt{T}}\]
+	\end{thm}
 \end{frame}
 \end{document}
