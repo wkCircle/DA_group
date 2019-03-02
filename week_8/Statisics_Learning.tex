@@ -1,0 +1,289 @@
+\documentclass{beamer} 
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[ruled,longend]{algorithm2e}
+\newtheorem*{dfn}{Definition}
+\newtheorem{thm}{Theorem}[subsection]
+ \renewcommand{\thethm}{\arabic{thm}}
+%\newtheorem{lemma}{Lemma}
+\title[Introduction]{Statistics Learning Theory:Linear Regression}
+\author{}
+\institute{}
+\date{2019.03.02}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+
+\section{Linear Regression}
+\begin{frame}{Linear Regression}
+	\begin{enumerate}
+		\item Domain set $\mathcal{X} \in R^d$
+		\item Label set $\mathcal{Y}$ is the set of real number
+		\item Hypothesis class
+			\[\mathcal{H}_{reg} = L_d = \{x \rightarrow \langle w,x \rangle + b: w \in R^d, b \in R\}\]
+		\item loss function
+			\[l(h,(x,y)) = (h(x) - y)^2\]
+		\item Empirical Risk function
+			\[L_S(h) = \frac{1}{m} \sum^m_{i=1} (h(x_i) - y_i)^2\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Linear Regression: Implementation of ERM rule}
+	Least square is the algorithm that solves the ERM problem for hypothesis class of linear regression predictors with respect to the squared loss. \\
+	The ERM problem can be written as 
+	\[arg \min_{w} L_S(h_w) = arg \min_w \frac{1}{m} \sum^m_{i=1} (\langle w,x_i \rangle - y_i)^2\]
+\end{frame}
+\begin{frame}{Linear Regression: Closed form solution for ERM rule}
+	To solve the problem we calculate the gradient of the objective function
+	\[\frac{2}{m} \sum^m_{i=1} (\langle w, x_i \rangle - y_i)x_i = 0\]
+	We can rewrite the problem as the problem $Aw = b$ where
+	\[A = (\sum^m_{i=1} x_i x^{\intercal}_i) \ \  \text{and} \ \ b=\sum^m_{i=1} y_i x_i \]
+	If $A$ is invertible then the solution to the ERM problem is 
+	\[w = A^{-1} b\]
+\end{frame}
+\begin{frame}{Linear Regression: ERM rule}
+	If $A$ is not invertible, we still can find the solution to the system $Aw = b$ since $b$ is in the range of $A$.
+	\\
+	To be specific, since $A$ is symmetric we can decompose $A$ as 
+	\[A = VDV^{\intercal}\]
+	where $D$ is a diagonal matrix and $V$ is an orthonormal matrix. After normalizing $D$ we can obtain
+	\[A^{+} = VD^{+}V^{\intercal} \ \ \text{and} \ \ \hat{w} = A^{+} b\]
+	Let $v_i$ denote the $i$'th column of $V$. Then, we have 
+\[A \hat{w} = A A^{+} b = VDV^{\intercal} VD^{+}V^{\intercal} b = VDD^{+} V^{\intercal} b = \sum_{i:D_{i,i} \neq 0} v_i v^{\intercal}_i b\]
+\end{frame}
+\section{Consistency Theorem}
+\begin{frame}{Consistency Theorem}
+	Let 
+	\[Q_n(\theta) = \text{some objective function}\]
+	\[\hat{\theta} = arg\max_{\theta \in \Theta} Q_n(\theta)\]
+	Examples:
+	\begin{enumerate}
+		\item NLLS : $Q_n(\theta) = - \frac{1}{n} \sum^n_{i=1} (y_i - m(x_i,\theta))^2$
+		\item ML : $Q_n(\theta) = \frac{1}{n} \sum^n_{i=1} \log f(z_i,\theta)$
+		\item GMM : $Q_n(\theta) = - (\frac{1}{n} \sum^n_{i=1} g(z_i,\theta))' W (\frac{1}{n} \sum^n_{i=1}g(z_i,\theta))$
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Consistency Theorem}
+	\begin{thm}[General Consistency Theorem]
+		Suppose
+		\begin{enumerate}
+				\item $\Theta$ is compact
+				\item $\sup_{\theta \in \Theta} |Q_n(\theta) - Q_{*} (\theta)| \rightarrow^p 0$ for some $Q_*:\Theta \rightarrow R$
+				\item $Q_*$ is continuous in $\theta \in \Theta$
+				\item $Q_*$ is uniquely maximized at $\theta_0$
+		\end{enumerate}
+		Then 
+		\[\hat{\theta} \rightarrow^p \theta_0\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Consistency Theorem Proof}
+	Pick $\varepsilon>0$, since $\hat{\theta} $ maximizes $Q_n(\theta)$
+ \[Q_n(\hat{\theta}) > Q_n(\theta_0) - \frac{\varepsilon}{3}\]
+ By condition 2, for any $\theta \in \Theta$
+ \[|Q_n(\theta) - Q_*(\theta)| < \frac{\varepsilon}{3}\]
+ with probability approaching one
+\end{frame}
+\begin{frame}{Consistency Theorem Proof}
+	Thus with  probability approaching one
+	\[Q_n(\hat{\theta}) - Q_*(\hat{\theta}) < \frac{\varepsilon}{3}\]
+	\[Q_*(\theta_0) - Q_n(\theta_0) < \frac{\varepsilon}{3}\]
+	Combining these inequalities
+	\[Q_*(\hat{\theta}) + \frac{\varepsilon}{3} > Q_n(\hat{\theta})\]
+	\[> Q_n(\theta_0) - \frac{\varepsilon}{3}\]
+	\[> Q_*(\theta_0) - \frac{2 \varepsilon}{3}\]
+	Therefore,
+	\[Q_*(\hat{\theta}) >Q_*(\theta_0) - \varepsilon\]
+\end{frame}
+\begin{frame}{Consistency Theorem Proof}
+	Since we want to prove that $\hat{\theta} \rightarrow^p \theta_0$, we want to show that 
+	\[Pr\{\hat{\theta} \in \mathcal{N}\} \rightarrow 1\]
+	for any open set $\mathcal{N} \subset \Theta$ containing $\theta_0$ \\
+	Now pick any open set $\mathcal{N}$ containing $\theta_0$, since $\mathcal{N}$ is open, $\mathcal{N}^c$ is closed. By condition 1, $\Theta$ is compact, $\Theta \cap \mathcal{N}^c$ is also compact. Since $Q_*$ is continuous, Weierstrass theorem guarantees there exists $\theta_* \in \Theta \cap \mathcal{N}^c$ such that 
+	\[\sup_{\Theta \cap \mathcal{N}^c} Q_*(\theta) = Q_*(\theta_*)\]
+\end{frame}
+\begin{frame}{Consistency Theorem Proof}
+	Since $Q_*$ is uniquely maximized at $\theta_0$, we have 
+	\[Q_*(\theta_0) > Q_*(\theta_*)\]
+	and set
+	\[\varepsilon^{'} = Q_*(\theta_0) - Q_*(\theta_*) > 0\]
+	Using the previous inequality and set $\varepsilon = \varepsilon^{'}$
+	\[Q_*(\hat{\theta}) > Q_*(\theta_0) - \varepsilon^{'}\]
+	\[ =  Q_*(\theta_*)\]
+	\[= \sup_{\Theta \cap \mathcal{N}^c} Q_*(\theta)\]
+	This means that 
+	\[\hat{\theta} \in \mathcal{N}\]
+	with probability approaching one
+\end{frame}
+
+\begin{frame}{Consistency Theorem Remark}
+	\begin{enumerate}
+		\item For each application, most efforts are devoted to check Conditions 2 and 4
+		\item Condition 4 is called identification condition. If $Q_*(\theta)$ is maximized at multiple points, we cannot tell where $\hat{\theta}$ converges in general
+		\item Condition 2 sats that objective function $Q_n(\theta)$ uniformly converges in probability to the limit objective function $Q_*(\theta)$
+		\item For condtion 2, we typically need some kind of uniform law of large numbers
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Uniform law of large number}
+	\begin{thm}
+		\begin{enumerate}
+				\item $\Theta$ is compact
+				\item $g(z,\theta)$ is almost surely continuous at each $\theta \in \Theta$
+				\item There is $d(z)$ such that $|g(z,\theta) \leq d(z)$ for all $\theta \in \Theta$ and almost every $z$ and $E[d(z)] < \infty$
+		\end{enumerate}
+		Then 
+		\[\sup_{\theta \in \Theta} |\bar{g}(\theta) - E[g(z,\theta)]| \rightarrow^p 0\]
+	\end{thm}
+\end{frame}
+
+\begin{frame}{Consistency of NLLSE}
+	\begin{thm}
+		Suppose 
+		\begin{enumerate}
+				\item $\{(y_i,x^{'}_i)\}^n_{i=1}$ is iid and $E[y|x] = m(x,\theta)$ almost surely only if $\theta = \theta_0$
+			\item $\Theta$ is compact
+			\item $m(x,\theta)$ is almost surely continuous at each $\theta \in \Theta$
+			\item $E[y^{2}] < \infty$ and $E[\sup_{\theta \in \Theta} |m(x,\theta)|^{2}] < \infty$
+		\end{enumerate}
+		Then 
+		\[\hat{\theta} \rightarrow^p \theta_0\]
+	\end{thm}
+\end{frame}
+
+\begin{frame}{Consistency of NLLSE}
+	It is sufficient to check condition $1-4$ in the general theorem. Condition 1 is guaranteed by our second condition. \\
+	Condition 2: $Q_*(\theta) = - E[\{y - m(x,\theta)\}^2]$, we want to show that 
+	\[\sup_{\theta \in \Theta} | \frac{1}{n} \sum^n_{i=1}\{y_i - m(x_i,\theta)\}^2 - E[\{y - m(x,\theta)\}^2]| \rightarrow^p 0\]
+	The above is holded by applying the ULLN. Since ULLN also guarantees continuity of $Q_*(\theta)$. Thus condition 3 is also satisfied.
+\end{frame}
+\begin{frame}{Consistency of NLLSE}
+	It remains to check condition 4, identification of $\theta_0$. i.e.
+	\[Q_*(\theta) = - E[\{y - m(x,\theta)\}^2]\]
+	is uniquely maximized at $\theta_0$. Since $m(x) = E[y|x]$ solves 
+	\[\min_g E[\{y - g(x)\}^2]\]
+\end{frame}
+\section{General Asymptotic Normality Theorem}
+\begin{frame}{General Asymptotic Normality Theorem:Basic Idea}
+	Now consider asymptotic distribution of extremum estimator
+	\[Q_n(\theta) = \text{some objective function}\]
+	\[\hat{\theta} = arg \max_{\theta \in \Theta} Q_n(\theta)\]
+	Assume consistency $\hat{\theta} \rightarrow^p \theta_0$ \\
+	We want to derive asymptotic normal distribution in the form of 
+	\[\sqrt{n} (\hat{\theta} - \theta_0) \rightarrow^d N(0,V)\] 
+	The result can be used to construct confidence interval or to conduct hypothesis testing
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem:Basic Idea}
+Suppose $Q_n(\theta)$ is continuously twice differentiable. Look at FOC for $\hat{\theta}$
+\[\frac{\partial Q_n(\hat{\theta})}{\partial \theta} = 0\]
+	Using the Taylor expansion, we can get 
+	\[0 = \frac{\partial Q_n(\theta_0)}{\partial \theta} + \frac{\partial^2 Q_n(\tilde{\theta)}}{\partial \theta \partial \theta^{'}}(\hat{\theta} - \theta_0)\]
+	where $\tilde{\theta}$ is a point on the line joining $\hat{\theta}$ and $\theta_0$. Solving for $(\hat{\theta} - \theta_0)$(if inverse exists), we get
+	\[\sqrt{n} (\hat{\theta} - \theta_0) = - (\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}})^{-1} (\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta})\]
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem:Basic Idea}
+	If 
+	\[\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} \rightarrow^p H\]
+	\[\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} \rightarrow^d N(0,\Sigma)\]
+	Then we obtain
+	\[\sqrt{n} (\hat{\theta} - \theta_0) \rightarrow^d N(0,H^{-1}\Sigma H^{-1})\]
+	Typically the first condition is verified by ULLN and the second condition is verified by CLT.
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem}
+	\begin{thm}
+		Suppose
+		\begin{enumerate}
+			\item $\hat{\theta} \rightarrow^p \theta_0$ and $\theta_0 \in int\Theta$
+			\item $Q_n(\theta)$ is twice continuously differentiable in a neighborhood $\mathcal{N}$ of $\theta_0$
+			\item $\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} \rightarrow^d N(0,\Sigma)$
+			\item There exists $H(\theta)$ that is continuous at $\theta_0$, $\sup_{\theta \in \mathcal{N}} |\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} - H(\theta)| \rightarrow^p 0$, and $H = H(\theta_0)$ is nonsingular
+		\end{enumerate}
+		Then
+		\[\sqrt{n}(\hat{\theta} - \theta_0) \rightarrow^d N(0,H^{-1} \Sigma H^{-1})\]
+	\end{thm}
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Proof}
+	Pick any convex and open set $\mathcal{N}^{'} \subset \mathcal{N}$ containing $\theta_0$, and define the indicator $\hat{I} = I\{\hat{\theta} \in \mathcal{N}^{'}\}$ \\
+	Note that $\hat{I} \rightarrow^p 1$ \\
+	By condition 2 and Taylor expansion we get 
+	\[0 = \hat{I} \frac{\partial Q_n(\hat{\theta}}{\partial \theta}\]
+		\[= \hat{I} \sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} + \hat{I} \frac{\partial^2 Q_n(\tilde{\theta)}}{\partial \theta \partial \theta^{'}} (\hat{\theta} - \theta_0)\]
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Proof}
+Since $\tilde{\theta)} \rightarrow^p \theta_0$, we have
+\[|\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} - H|\]
+\[\leq |\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} - H(\tilde{\theta})| + |H(\tilde{\theta}) - H|\]
+\[\leq \sup_{\theta \in \mathcal{N}} | \frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} - H(\theta)| + |H(\tilde{\theta}) - H|\]
+\[\rightarrow^p 0\]
+By condition 4 and continuous mapping theorem \\
+Since $H$ is nonsingular,
+\[\bar{I}:= I\{\hat{\theta} \in \mathcal{N}^{'}, \frac{\partial^2 Q_n(\tilde{\theta})}{\partial \theta \partial \theta^{'}} \text{is nonsingular}\} \rightarrow^p 1\]
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Proof}
+	Combining these results,
+	\[0 = \bar{I} \sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} +\bar{I} \frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} (\hat{\theta} - \theta_0)\]
+	Solving for $(\hat{\theta} - \theta_0)$ we obtain
+	\[\sqrt{n}(\hat{\theta} - \theta_0)\]
+	\[= - \bar{I} (\frac{\partial^2 Q_n(\tilde{\theta})}{\partial \theta \partial \theta^{'}})^{-1} (\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta}) + \{1- \bar{I}\} \sqrt{n} (\hat{\theta} - \theta_0)\]
+	By condition 3 and $\bar{I} \rightarrow^p 1 $, the first term converges to $N(0, H^{-1}\Sigma H^{-1})$.
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Proof}
+	It remains to show second term satisfies 
+	\[\{1- \bar{I}\} \sqrt{n} (\hat{\theta} - \theta_0) \rightarrow^p 0\]
+	To see this, let $Z_n = \sqrt{n} (\bar{\theta} - \theta_0)$ and pick any $\varepsilon >0$. Then
+	\[Pr\{|(1-\bar{I} Z_n| > \varepsilon\}\]
+		\[=Pr \{|(1-\bar{I} Z_n| > \varepsilon, \bar{I} = 1\} + Pr\{|(1-\bar{I})Z_n|>\varepsilon, \bar{I}=0\}\] 
+			\[\leq Pr\{0>\varepsilon\} + Pr\{\bar{I} = 0\}\]
+			\[\rightarrow 0\]
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Application to NLLSE}
+	Let 
+	\[Q_n(\theta) = -\frac{1}{n} \sum^n_{i=1} \{y_i - m(x_i,\theta)\}^2\]
+	\[\hat{\theta} = arg \max_{\theta \in \Theta} Q_n(\theta)\]
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Application to NLLSE}
+\begin{thm}
+	Suppose
+	\begin{enumerate}
+			\item $\theta_0 \in int \Theta$
+			\item $m(x,\theta)$ is twice continuously differentiable in a neighborhood $\mathcal{N}$ of $\theta_0$ with probability one
+			\item $E[y^4] < \infty$ $E|\frac{\partial m(x,\theta_0)}{\partial \theta}|^4$ and 
+				\[E[\sup_{\theta \in \mathcal{N}} | \frac{\partial^2 m(x,\theta)}{\partial \theta \theta^{'}}|^2 < \infty\]
+				\item $H = E[\frac{\partial m(x,\theta_0)}{\partial \theta} \frac{\partial m(x,\theta_0)}{\partial \theta^{'}}]$ is nonsingular
+	\end{enumerate}
+	Then 
+	\[\sqrt{n}(\hat{\theta} - \theta_0) \rightarrow^d N(0, H^{-1} \Sigma H^{-1})\]
+	where $\Sigma = E[e^2 \frac{\partial m(x,\theta_0)}{\partial \theta} \frac{\partial m(x,\theta_0)}{\partial \theta^{'}}]$ and $e = y - m(x,\theta_0)$
+\end{thm}
+\end{frame}
+\begin{frame}{General Asymptotic Normality Theorem: Application to NLLSE Proof}
+	It is enough to check conditions for General asymptotic normality theorem. \\
+	For condition 1, consistency is already verified and $\theta_0 \in int\Theta$\\
+	Condition 2 is satisfied by (ii) \\
+	In this case, condition 3 is verified as 
+	\[\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} = \frac{1}{\sqrt{n}} \sum^n_{i=1} \frac{\partial m(x_i,\theta_0)}{\partial \theta} e_i \rightarrow^d N(0,\Sigma)\]
+	where $e_i = y_i - m(x,\theta_0)$ and convergence follows from CLT with (iii)(Note that $E[y^4] <\infty \rightarrow E[e^4] < \infty$)
+\end{frame}
+\end{document}
