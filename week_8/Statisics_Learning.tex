@@ -25,7 +25,7 @@
 \title[Introduction]{Statistics Learning Theory:Linear Regression}
 \author{}
 \institute{}
-\date{2019.03.02}
+\date{2019.03.09}
 
 \begin{document}
 
@@ -73,6 +73,60 @@
 	\[A^{+} = VD^{+}V^{\intercal} \ \ \text{and} \ \ \hat{w} = A^{+} b\]
 	Let $v_i$ denote the $i$'th column of $V$. Then, we have 
 \[A \hat{w} = A A^{+} b = VDV^{\intercal} VD^{+}V^{\intercal} b = VDD^{+} V^{\intercal} b = \sum_{i:D_{i,i} \neq 0} v_i v^{\intercal}_i b\]
+\end{frame}
+\begin{frame}{Consistency Theorem: The weak law of large number}
+	\begin{thm}[Law of large number]
+		If $z_i \in R^d$ is iid and $E|z_i| < \infty$, then
+		\[\bar{z} = \frac{1}{n} \sum^n_{i=1} z_i \rightarrow^p E[z]\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Asymptotic Theorem: central limit theorem}
+	\begin{thm}[Central limit theorem]
+		If $z_i \in R^d$ is iid and $E|z_i|^2 < \infty$, then 
+		\[\sqrt{n} (\bar{z} - \mu) = \frac{1}{\sqrt{n}} \sum^n_{i=1} (z_i - \mu) \rightarrow^d N(0,V)\]
+		Where
+		\[\mu = E[z_i]\]
+		\[V = Var(z_i) = E[(z_i - \mu)(z_i - \mu)']\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Least square property}
+	Linear projection Model:
+	\[y_i = x'_i \beta + e_i  \ \ E[x_ie_i]=0\]
+	OLS estimator
+	\[\hat{\beta} = (\frac{1}{n} \sum^n_{i=1} x_ix'_i)^{-1} (\frac{1}{n} \sum^n_{i=1} x_iy_i)\]
+	Remark: There is a strong assumption model: Regression model is to assume $E[x_i|e_i]=0$ \\
+	Assumptions:
+	\begin{enumerate}
+		\item $\{(y_i,x'_i): i=1,\cdots n\}$ is iid
+		\item $Ey^2_i< \infty$ and $E|x_i|^2 < \infty$
+		\item $E[x_ix'_i]$ is positive definite
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Consistency of $\beta$}
+By Cauchy-Schwarz inequality with Assumption 2: 
+\[E|x_ix'_i| \leq E|x_i|^2 < \infty\]
+\[E|x_i y_i|\leq \sqrt{E|x_i|^2} \sqrt{Ey^2_i} < \infty\]
+The LLN implies that 
+\[\frac{1}{n} \sum^n_{i=1} x_ix'_i) \rightarrow E[x_i x'_i], \ \ \frac{1}{n} \sum^n_{i=1} x_iy_i \rightarrow E[x_iy_i]\]
+Therefore
+\[\hat{\beta} \rightarrow^p E[x_i x'_i]^{-1} E[x_iy_i] = \beta\]
+\end{frame}
+\begin{frame}{Asymptotic distribution of $\hat{\beta}$}
+	Since
+\[\hat{\beta} = \beta + (\frac{1}{n} \sum^n_{i=1} x_ix'_i)^{-1} (\frac{1}{n} \sum^n_{i=1} x_ie_i)\]
+Hence
+\[\sqrt{n}(\hat{\beta} - \beta) = (\frac{1}{n} \sum^n_{i=1} x_ix'_i)^{-1}(\frac{1}{\sqrt{n}} \sum^n_{i=1} x_ie_i)\]
+\end{frame}
+\begin{frame}{Asymptotic distribution of $\hat{\beta}$}
+	To apply CLT to $\frac{1}{\sqrt{n}} \sum^n_{i=1} x_ie_i$, we need to assume that 
+	\[Ey^4_i < \infty \ \ E|x_i|^4 < \infty \]
+	Under this condition we know that 
+	\[E|x_ie_i|^2 = E|x_i|^2|e_i|^2 \leq \sqrt{E|x_i|^4} \sqrt{E|e_i|^4} < \infty\]
+	Thus CLT implies:
+	\[\frac{1}{\sqrt{n}} \sum^n_{i=1} x_i e_i \rightarrow^d N(0, \Sigma) \ \ \Sigma = E[e^2_ix_ix'_i]\]
+	Since $\frac{1}{n} \sum^n_{i=1} x_ix'_i \rightarrow^p E[x_ix'_i] =Q$, continuous mapping theorem implies that  
+	\[\sqrt{n}(\hat{\beta} - \beta) \rightarrow^d Q^{-1}N(0,\Sigma)\]
+	\[ = N(0,Q^{-1}\Sigma Q^{-1})\]
 \end{frame}
 \section{Consistency Theorem}
 \begin{frame}{Consistency Theorem}
@@ -216,9 +270,9 @@ Suppose $Q_n(\theta)$ is continuously twice differentiable. Look at FOC for $\ha
 		Suppose
 		\begin{enumerate}
 			\item $\hat{\theta} \rightarrow^p \theta_0$ and $\theta_0 \in int\Theta$
-			\item $Q_n(\theta)$ is twice continuously differentiable in a neighborhood $\mathcal{N}$ of $\theta_0$
+			 \item $Q_n(\theta)$ is twice continuously differentiable in a neighborhood $\mathcal{N}$ of $\theta_0$
 			\item $\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} \rightarrow^d N(0,\Sigma)$
-			\item There exists $H(\theta)$ that is continuous at $\theta_0$, $\sup_{\theta \in \mathcal{N}} |\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} - H(\theta)| \rightarrow^p 0$, and $H = H(\theta_0)$ is nonsingular
+			\ item There exists $H(\theta)$ that is continuous at $\theta_0$, $\sup_{\theta \in \mathcal{N}} |\frac{\partial^2 Q_n(\tilde{\theta)}}{\partial\theta \partial \theta^{'}} - H(\theta)| \rightarrow^p 0$, and $H = H(\theta_0)$ is nonsingular
 		\end{enumerate}
 		Then
 		\[\sqrt{n}(\hat{\theta} - \theta_0) \rightarrow^d N(0,H^{-1} \Sigma H^{-1})\]
@@ -285,5 +339,75 @@ Since $H$ is nonsingular,
 	In this case, condition 3 is verified as 
 	\[\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} = \frac{1}{\sqrt{n}} \sum^n_{i=1} \frac{\partial m(x_i,\theta_0)}{\partial \theta} e_i \rightarrow^d N(0,\Sigma)\]
 	where $e_i = y_i - m(x,\theta_0)$ and convergence follows from CLT with (iii)(Note that $E[y^4] <\infty \rightarrow E[e^4] < \infty$)
+\end{frame} 
+\section{The exercises relating to the topic}
+\begin{frame}{Exercise 1:Nonlinear regression model}
+	Consider the following model
+	\[y_i = x^{\beta}_i + e_i \ \ E[e_i|x_i]=0 \ \ x_i >0 \ \ \text{is scalar}\]
+	We aim to solve 
+	\begin{enumerate}
+		\item Write down the asymptotic distribution of the NLLS estimator $\hat{\beta}$.
+		\item Let $\theta = \sqrt{\beta}$. Find the 95\% asymptotic confidence interval for $\theta$
+		\item Let $m(c) = E[y_i|x_i=c]$ be the conditional mean at $c$. Find the 95\% asymptotic confidence interval for $m(c)$.
+		\item Suppose $\sigma^2_i = E[e^2_i|x_i]$ is known. Find a better estimator than the NLLS estimator $\hat{\beta}$. Explain briefly why it is better.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Nonlinear regression model:(a)}
+	In the part, we want to apply the general theorem for asymptotic distribution, under the suitable conditions, we know that 
+	\[\sqrt{n}(\hat{\beta} - \beta_0) \rightarrow^d N(0,H^{-1} \Sigma H^{-1})\]
+	Where
+	\[H = E[\frac{\partial m(x,\theta_0)}{\partial \theta} \frac{\partial m(x, \theta_0)}{ \partial \theta'}]\]
+	\[\Sigma = E[e^2 \frac{\partial m(x,\theta_0)}{\partial \theta} \frac{\partial m(x, \theta_0)}{ \partial \theta'}]\]
+	Since 
+	\[\frac{\partial m(x,\beta_0)}{\partial \beta} = x^{\beta_0} \log x\]
+	Therefore,
+\[\sqrt{n}(\hat{\beta} - \beta_0) \rightarrow^d \]
+\[ N(0, (E[x^{2\beta_0} (\log x)^2])^{-1} E[e^2[x^{2\beta_0} (\log x)^2] E[x^{2\beta_0} (\log x)^2])^{-1})\]
+
+\end{frame}
+\begin{frame}{Nonlinear regression model:(b)}
+	Using the delta method, that is the Taylor expansion
+	\[\theta = f(\hat{\beta}) = f(\beta_0) + \frac{\partial f(\beta)}{\partial \beta}(\tilde{\beta}) (\hat{\beta}\beta - \beta_0)\]
+	where $\tilde{\beta}$ is on the line between $\hat{\beta}$ and $\beta_0$, therefore
+	\[\sqrt{n}(\theta - \theta_0) = \frac{\partial f(\beta)}{\partial \beta}(\tilde{\beta}) \sqrt{n}(\hat{\beta} - \beta_0)\]
+	The consistency of $\hat{\beta}$ implies $\tilde{\beta} \rightarrow^p \beta_0$, therefore
+	\[\sqrt{n}(\theta - \theta_0) \rightarrow^d N(0,\frac{1}{4\beta_0} V)\]
+	where
+\[V = E[x^{2\beta_0} (\log x)^2])^{-1} E[e^2[x^{2\beta_0} (\log x)^2] E[x^{2\beta_0} (\log x)^2])^{-1}\]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(b)} 
+	Therefore, the 95 \% confidence interval can be constructed as
+	\[ [\hat{\theta} - z_{0.025} \sqrt{\frac{\hat{V}}{4 \hat{\beta}_n}}, \hat{\theta} + z_{0.025} \sqrt{\frac{\hat{V}}{4 \hat{\beta}_n}}]\]
+	where
+	\[\hat{V} = (\frac{1}{n} \sum^n_{i=1} x^{2\hat{\beta}}_i(\log x_i)^2)^{-1} (\frac{1}{n} \sum^n_{i=1} \hat{e}^2_i x^{2\hat{\beta}}_i(\log x_i)^2)(\frac{1}{n} \sum^n_{i=1} x^{2\hat{\beta}}_i(\log x_i)^2)^{-1} \]
+	\[\hat{e}_i = y_i - x^{\hat{\beta}}_i\]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(c)}
+Since $m(c) = c^{\beta}$ and 
+\[\frac{\partial c^{\beta}}{\partial \beta} = c^{\beta} \log c\]
+Using the delta method, we can get 
+\[\sqrt{n}(\hat{m(c)} - m(c)) \rightarrow^d N(0,c^{2\beta} (\log c)^2 V) \]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(d)}
+To be answered in the next slide
+\end{frame}
+\begin{frame}{Exercise 2:linearized  estimator}
+	Let $\hat{\theta} = arg\max_{\theta \in \Theta} Q_n(\theta)$ be an extremum estimator of a scalar parameter $\theta_0$, and $\hat{\theta}$ be a preliminary estimator of $\theta_0$ such that $\sqrt{n}(\bar{\theta}-\theta_0) = O_p(1)$. Consider the following 'linearized' estimator of $\theta_0$:
+	\[\tilde{\theta} = \bar{\theta} - (\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}) \]
+	Find the asympotic distribution of $\tilde{\theta}$ 
+\end{frame}
+\begin{frame}{Exercise 3}
+	Let $f_n$ be a sequence of functions on $S \in R$ such that $\sup_{x \in S} |f_n(x) - f(x)| \rightarrow 0$ \\
+	(a): show that $\sup_{x \in S} f_n(x) \rightarrow \sup_{x \in S} f(x)$ \\
+	(b): show that $\inf_{x \in S} f_n(x) \rightarrow \inf_{x \in S} f(x)$
+\end{frame}
+\begin{frame}{Exercise 4}
+	Consider the following minimum distance estimator
+	\[\hat{\theta} = arg \min_{\theta \in \Theta} \{\hat{\pi} - h(\theta)\}' W \{\hat{\pi} - h(\theta)\}\]
+	where $\hat{\pi} = \frac{1}{n} a(x_i)$ is a q-dimensional vector of the sample moments based on the sample $\{x_i\}^n_{i=1}, h:R^k \rightarrow R^q$ is a known function with $q \geq k$, and $W$ is a positive definite weight matrix. 
+	\begin{enumerate}
+		\item State assumptions and prove consistency of $\hat{\theta}$
+		\item State assumptions and prove asymptotic normality of $\hat{\theta}$
+	\end{enumerate}
 \end{frame}
 \end{document}
