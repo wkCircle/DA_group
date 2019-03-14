@@ -1,0 +1,196 @@
+\documentclass{beamer} 
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[ruled,longend]{algorithm2e}
+\newtheorem*{dfn}{Definition}
+\newtheorem{thm}{Theorem}[subsection]
+ \renewcommand{\thethm}{\arabic{thm}}
+%\newtheorem{lemma}{Lemma}
+\title[Introduction]{Statistics Learning Theory:Generalized Method of Moments}
+\author{}
+\institute{}
+\date{2019.03.17}
+ 
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+\section{Solution of last week}
+\begin{frame}{Solution of Problem(c)}
+	Let $f_n$ be a sequence of functions on $S \subset R$ such that $\sup_{x \in S} |f_n(x) - f(x)| \rightarrow 0$
+	\begin{enumerate}
+		\item Show that $\sup_{x \in S} f_n(x) \rightarrow \sup_{x \in S} f(x)$
+		\item Show that $\inf_{x \in S} f_n(x) \rightarrow \inf_{x \in S} f(x)$
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Solution of Problem(c)}
+	Since $\sup_{x \in S} |f_n(x) - f(x)| \rightarrow 0$, therefore, given $\varepsilon >0$, there exists $N>0$ such that $n > N$ then
+	\[\sup_{x \in S} |f_n(x) - f(x)| < \frac{\varepsilon}{2}\]
+	which implies that $\frac{-\varepsilon}{2}< f(x) - f(x) < \frac{\varepsilon}{2} \ \ \forall x \in S$\\
+	(a): By the definition of supremum, there exists $x_{1n},x_{2n} \in S$ such that
+	\[f_n(x_{1n}) + \frac{\varepsilon}{2} > \sup_{x \in S} f_n(x)\]
+	\[f(x_{2n}) + \frac{\varepsilon}{2} > \sup_{x \in S} f(x)\]
+\end{frame}
+\begin{frame}{Solution of Problem(c)}
+	Therefore, given $n>N$, we have
+	\[ f_n(x_{1n}) + \frac{\varepsilon}{2} - f(x_{1n})> \sup_{x \in S} f_n(x) - \sup_{x \in S} f(x) > f_(x_{2n}) - f(x_{2n}) - \frac{\varepsilon}{2}\]
+	where
+	\[f_n(x_{1n}) + \frac{\varepsilon}{2} - f(x_{1n}) < \varepsilon\]
+	\[f_(x_{2n}) - f(x_{2n}) - \frac{\varepsilon}{2} > - \varepsilon\]
+	Therefore
+	\[\sup_{x \in S} f_n(x) \rightarrow \sup_{x \in S} f(x)\]
+\end{frame}
+\begin{frame}{Solution of Problem(c)}     
+	(b) Using the similar technique, we have 
+	\[\frac{-\varepsilon}{2}< f(x) - f(x) < \frac{\varepsilon}{2} \ \ \forall x \in S\]
+	\[\inf_{x \in S} f_n(x) > f_n(x_{1n}) - \frac{\varepsilon}{2}\]
+	\[\inf_{x \in S} f(x) > f(x_{2n}) - \frac{\varepsilon}{2}\]
+	Therefore
+	\[f_n(x_{2n}) - f(x_{2n}) + \frac{\varepsilon}{2} > \inf_{x \in S} f_n(x) - \inf_{x \in S} f(x) > f_n(x_{1n}) - f(x_{1n}) - \frac{\varepsilon}{2}\]
+	It is a desired result.
+\end{frame}
+\begin{frame}{Solution of (d)}
+	By the definition , we have that 
+	\[\sqrt{n}(\tilde{\theta} - \theta_0) = \sqrt{n}(\tilde{\theta} - \bar{\theta}) + \sqrt{n}(\bar{\theta} - \theta_0)\]
+	\[ = -\sqrt{n}(\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}) + (\sqrt{n}(\bar{\theta} - \theta_0)\]
+		By Taylor Expansion, we can obtain that 
+		\[\frac{\partial Q_n(\bar{\theta})}{\partial \theta}  = \frac{\partial Q_n(\theta_0)}{\partial \theta} + \frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2}(\bar{\theta} - \theta_0)\]
+		Therefore
+		\[\bar{\theta} - \theta_0 = (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}  -  \frac{\partial Q_n(\theta_0)}{\partial \theta})\]
+\end{frame}
+\begin{frame}{Solution of (d)}
+	Substitute the above, we have that 
+	\[\sqrt{n}(\tilde{\theta} - \theta_0)\]
+	\[=-\sqrt{n}(\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta})+ \sqrt{n} (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}  -  \frac{\partial Q_n(\theta_0)}{\partial \theta})\]
+\[= -\sqrt{n} (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1}\frac{\partial Q_n(\theta_0)}{\partial \theta} \]
+\[+\sqrt{n}\frac{\partial Q_n(\bar{\theta})}{\partial \theta} (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} - (\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1}) \]
+\[ = (I) + (II)\]
+\end{frame}
+\begin{frame}{Solution of (d)}
+	Since $\bar{\theta} \rightarrow^p \theta$, we know that $\theta_B \rightarrow^p \theta_0$, therefore
+	\[(I) \rightarrow^d N(0,H(\theta_0)^{-2} \Sigma)\]
+	We claim that the second term would converge to zero in probability, since
+\[(II) \leq |\sqrt{n}\frac{\partial Q_n(\bar{\theta})}{\partial \theta}| |(\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} - (\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1}|\]
+Since both 
+\[(\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} \rightarrow^p H(\theta_0)^{-1}\]
+\[(\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} \rightarrow^p H(\theta_0)^{-1}\]
+\end{frame}
+\begin{frame}{Solution of (d)}
+	The second term in inequality would be $o_p(1)$, now, turning to the first term
+	\[|\sqrt{n}\frac{\partial Q_n(\bar{\theta})}{\partial \theta}|\]
+\[ = \sqrt{n} |(\frac{\partial Q_n(\theta_0)}{\partial \theta} + \frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2} (\bar{\theta} - \theta_0)|\]
+\[\leq \sqrt{n} |\frac{\partial Q_n(\theta_0)}{\partial \theta}| \leq \frac{\partial^2 Q_n(\theta_B)}{\partial\theta^2} (\bar{\theta} - \theta_0)|\]
+\[ = O_p(1) + O_p(1) = O_p(1)\]
+Therefore,
+\[(II) \leq o_p(1) O_p(1) = o_p(1)\]
+\end{frame}
+\section{GMM}
+\begin{frame}{GMM: Introduction}
+	GMM is one of the most popular estimation method in applied econometrics. GMM generalizes the classical method of moments estimator by allowing for models that have more equations than unknown parameters and are thus overidentified. GMM includes as special cases OLS,IV, multivariate regression, and 2SLS.  
+\end{frame}
+\begin{frame}{GMM: : Linear case}
+	Consider linear projection model
+	\[y_i = x'_{1i} \beta_1 + x_{2i} \beta_2 + e_i\]
+	\[E\begin{bmatrix}
+		x_{1i} e_i \\	
+		x_{2i} e_i
+		\end{bmatrix} =0
+		\]
+	\begin{enumerate}
+		\item This model can be estimated by OLS.
+		\item Now suppose we know that a priori that $\beta_2=0$. Then model becomes 
+			\[y_i = x'_{1i} \beta_1 + e_i\]
+			\[E \begin{bmatrix}
+				x_{1i} e_i \\	
+				x_{2i} e_i
+				\end{bmatrix}
+				=0\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM: : Linear case}
+	\begin{enumerate}
+			\item How do we estimate $\beta_1$?
+			\item One may estimate $\beta_1$ by OLS from $y$ on $x_1$ which utilize information $E[x_{1i} e_i] = 0$
+			\item But this is not necessarily efficient because it does not use additional information $E[x_{2i} e_i]=0$
+			\item In this model, the number of parameters is dim$\beta_1 = k$ but the number of moment restrictions is dim$x_1+$ dim$x_2 = k+r$ 
+			\item Such situation is called overidentified
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Moment restriction model}
+	\begin{enumerate}
+\item In general we consider	
+\[E[g(w_i,\beta)]=0\]
+where $\beta$ us k-dimenstional parameters and $g$ is $l$-dimensional vector of functions with $l \geq k$ 
+\item Above example is 
+	\[g(w_i,\beta) = x_i(y_i - x'_{1i} \beta_1)\]
+	where $x_i = (x'_{1i}, x'_{2i})'$
+\end{enumerate}
+\end{frame}
+\begin{frame}{GMM estimator}
+	To generalize, consider linear model
+	\[y_i = x'_i \beta + e_i\]
+	\[E[z_i e_i] = 0\]
+\begin{enumerate}
+	\item If dim $g= $  dim $\beta$( called just identification), then we can apply method of moments that solves $\bar{g} = \frac{1}{n} \sum^n_{i=1} g(w_i,\beta) = 0$
+	\item But if dim $g > $ dim $\beta $(overidentified), we cannot solve this equation in general
+\end{enumerate}
+\end{frame}
+\begin{frame}{GMM estimator}
+	\begin{enumerate}
+	\item For overidentified case, we can minimize weighted Euclidean norm
+	\[J_n(\beta) = n\bar{g}(\beta)' W_n \bar{g}(\beta)\]
+where $W_n$ is symmetric weight matrix
+	\item Minimizer of this object is called Generalized method of moments(GMM) estimator
+		\[\hat{\beta} = arg \min_{\beta} J_n(\beta)\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM:estimator}
+	In the linear model
+	\[\bar{g}(\beta) = \frac{1}{n} \sum^n_{i=1} z_i (y_i - x'_i \beta) = \frac{1}{n} Z'(y-X\beta)\]
+	So, FOC of $\hat{\beta}$ is 
+	\[0 = \frac{\partial J_n(\hat{\beta})}{\partial \beta} = 2n (\frac{\partial \bar{g}(\hat{\beta})}{\partial \beta'})' W_n \bar{g}(\hat{\beta})\]
+	\[= -2n(\frac{1}{n} X' Z) W_n (\frac{1}{n} Z'(y - X \hat{\beta}))\]
+	Solbing for $\hat{\beta}$ yields
+	\[\hat{\beta} = (X'ZW_n Z' X)^{-1} X'ZW_nZ'y\]
+\end{frame}
+\begin{frame}{GMM: Asymptotic distribution of $\hat{\beta}$}
+	Note that 
+	\[\hat{\beta} = \beta + (X'ZW_n Z' X)^{-1} X'ZW_nZ' e\]
+	and thus
+	\[\sqrt{n} (\hat{\beta} - \beta) - [(\frac{1}{n} X' Z) W_n (\frac{1}{n} Z'X)]^{-1} (\frac{1}{n} X'Z) W_n (\frac{1}{\sqrt{n}} Z' e)\]
+	By LLN and CLT under certain assumption
+	\[\frac{1}{n} Z'X \rightarrow^p E[z_ix'_i] :=Q\]
+	\[\frac{1}{\sqrt{n}} Z'e \rightarrow^d N(0, \Sigma)\]
+	Where $\Sigma = E[e^2_i z_i z'_i]$
+\end{frame}
+\begin{frame}{GMM:estimator}
+	Suppose $W_n \rightarrow^p W$ for positive definite symmetric $W$. By CMT
+	\[\sqrt{n} (\hat{\beta} - \beta) \rightarrow^d N(0,V_W)\]
+	where $V_W = (Q'WQ)^{-1} Q'W\Sigma WQ(Q'WQ)^{-1}$ \\
+	Asympototic variance $V_W$ depends on weight $W$. This is minimized by choosing
+	\[W^* = \Sigma^{-1}\]
+	which implies $V_{W^*} = (Q'\Sigma^{-1}Q)^{-1}$ 
+\end{frame}
+\end{document}
