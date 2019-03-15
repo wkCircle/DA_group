@@ -37,7 +37,68 @@
 %\begin{frame}{Outline}
 %  \tableofcontents
 %\end{frame}
+\section{GLS estimator}
+\begin{frame}{GLS estimator}
+	Suppose the linear regression model
+	\[y_i = x'_i \beta + e_i \]
+	\begin{enumerate}
+	\item $E[e_i|x_i]=0$
+	\item $\{(y_i,x_i)\}$ iid
+	\item $E[y^2_i]	< \infty$
+	\item $E|x_i|^2 < \infty$
+	\item $E[x_i x'_i] $ is positive definite
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GLS estimator}
+Since 
+\[\hat{\beta} - \beta = (X'X)^{-1}X'e\]
+We have
+\[Var(\hat{\beta}|X) = E[(X'X)^{-1}X'ee'X(X'X)^{-1}|X]\]
+\[= (X'X)^{-1} X'DX(X'X)^{-1}\]
+Where
+\[D = E[ee'|X] = \begin{bmatrix}
+				\sigma^2_{1} & 0 & \dots & 0 \\
+				0 & \sigma^2_{2} & \dots & 0 \\
+				\vdots & \vdots & \ddots  \\ 
+				0 & 0 & \dots & \sigma^2_n
+\end{bmatrix}\]
+where
+\[\sigma^2_i =  E[e^2_i|x_i]\]
+\end{frame}
+\begin{frame}{Gauss Markov Theorem}
+	\begin{thm}
+		In linear regression model, the best unbiased linear estimator is
+	\[\tilde{\beta} = (X'D^{-1}X)^{-1} )X'D^{-1}y\]
+	\end{thm}
+	Where $\tilde{\beta}$ is called generalized least square(GLS)
+	The best means that 
+	\[Var(\tilde{\beta}) - Var(\hat{\beta})\]
+	is positive semi-definite
+\end{frame}
+\begin{frame}{Homoscedastic}
+	if $\sigma_1 = \sigma_2 =  \dots = \sigma_n  = \sigma$
+	then 
+	\[D^{-1} = \frac{1}{\sigma^2} I \]
+	\[\tilde{\beta} = (X'X)^{-1} X' y\]
+	Which is coincide with OLS estimator
+\end{frame}
+
 \section{Solution of last week}
+\begin{frame}{Solution of (b).d}
+	Consider the GLS-type NLLS in the presence of known heteroscedasticity
+	\[\frac{y_i}{\sigma_i} = \frac{x^{\beta}_i}{\sigma_i} + u_i \ \ u_i = \frac{e_i}{\sigma}\]
+	Therefore, $E[u^2_i|x_i] = 1$ which restoreshomoscedasticity. The estimator can be defined as 
+	\[\hat{\beta}_{GLS} = arg\min_{\beta} \sum^n_{i=1} (\frac{y_i}{\sigma_i} - \frac{x^{\beta}_i}{\sigma})^2\]
+	We can derive the asympototic distribution as part(a) by changing $m(x,\beta) = \frac{x^{\beta}_i}{\sigma}$
+	\[\sqrt{n}(\hat{\beta_{GLS}} - \beta) \rightarrow^d N(0,H^{-1}\Sigma H^{-1})\]
+\end{frame}
+\begin{frame}{Solution of (b).d}
+	Where
+	\[H = E[\frac{x^{2 \beta_0}_i (\log x_i)^2}{\sigma^2_i}]\]
+	\[\Sigma = E[\frac{x^{2 \beta_0}_i (\log x_i)^2}{\sigma^2_i}]\]
+	Therefore
+	\[V_{GLS} = (E[\frac{x^{2 \beta_0}_i (\log x_i)^2}{\sigma^2_i}])^{-1}\]
+\end{frame}
 \begin{frame}{Solution of Problem(c)}
 	Let $f_n$ be a sequence of functions on $S \subset R$ such that $\sup_{x \in S} |f_n(x) - f(x)| \rightarrow 0$
 	\begin{enumerate}
@@ -106,6 +167,7 @@ Since both
 Therefore,
 \[(II) \leq o_p(1) O_p(1) = o_p(1)\]
 \end{frame}
+
 \section{GMM}
 \begin{frame}{GMM: Introduction}
 	GMM is one of the most popular estimation method in applied econometrics. GMM generalizes the classical method of moments estimator by allowing for models that have more equations than unknown parameters and are thus overidentified. GMM includes as special cases OLS,IV, multivariate regression, and 2SLS.  
