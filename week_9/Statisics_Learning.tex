@@ -255,4 +255,316 @@ where $W_n$ is symmetric weight matrix
 	\[W^* = \Sigma^{-1}\]
 	which implies $V_{W^*} = (Q'\Sigma^{-1}Q)^{-1}$ 
 \end{frame}
+\begin{frame}{GMM: General case}
+	Moment restriction model
+	\[E[g(w_i,\theta_0)] = 0\]
+	Here $g$ could be nonlinear \\
+	GMM estimator
+	\[\hat{\theta}_W = arg \min_{\theta \in \Theta} \bar{g}(\theta)' W_n \bar{g}(\theta)\]
+\end{frame}
+\begin{frame}{GMM: Consistency}
+	\begin{thm}
+		Suppose
+		\begin{enumerate}
+		\item $\Theta$ is compact
+		\item $W_n \rightarrow^p W$ and $W$ is symmetric and positive semi-definite
+		\item $g(w,\theta)$ is almost surely continuous at each $\theta \in \Theta$
+		\item $E[\sup_{\theta \in \Theta} |g(w,\theta)|] < \infty$
+		\item $WE[g(w,\theta)] = 0$ only if $\theta = \theta_0$
+		\end{enumerate}
+		Then
+		\[\hat{\theta}_W \rightarrow^p \theta_0\]
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM: Consistency proof}
+\end{frame}
+\begin{frame}{GMM:Asymptotic normality}
+	\begin{thm}
+		Suppose 
+		\begin{enumerate}
+				\item $\theta_0 \in int \Theta$
+				\item $g(w, \theta)$ is twice continuously differentiable in a neighborhood $\mathcal{N}$ of $\theta_0$ with probability one
+				\item $E[|g(w,\theta_0)|^2] < \infty$ and $E[\sup_{\theta \in \mathcal{N}} | \frac{\partial^2 g^{(j)}(z,\theta)}{\partial \theta \partial \theta'}|] < \infty$
+				\item $G'WG$ is nonsingular where $G = E[\frac{\partial g(w,\theta_0)}{\partial \theta'}]$
+		\end{enumerate}
+		Then
+		\[\sqrt{n}(\hat{\theta} - \theta_0) \rightarrow^d N(0,(G'WG)^{-1} G'W\Omega WG(G'WG)^{-1})\]
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM: Optimal weight}
+	Based on the asymptotic variance of $\hat{\theta}_W$
+\[V_W = (G'WG)^{-1} G'W\Omega WG(G'WG)^{-1})\]
+we can find an optimal $W$ to minimize the asymptotic variance in the positive definite sense
+\begin{thm}
+	For any $W$ with nonsingular $G'WG$, it holds 
+	\[V_W - V_{\Omega^{-1}} \ \ \text{is positive semi-definite}\]
+	where
+	\[V_{\Omega^{-1}} = (G'\Omega^{-1}G)^{-1}\]
+\end{thm}
+\end{frame}
+\begin{frame}{GMM: optimal weight proof}
+	Let 
+	\[A = WG(G'WG)^{-1}\]
+	\[B = \Omega^{-1} G(G' \Omega^{-1} G)^{-1}\]
+	Then
+	\[V_W = A' \Omega A\]
+	\[V_{\Omega^{-1}} = B' \Omega B\]
+	Note that
+	\[V_W = (A-B+B)' \Omega(A-B+B)\]
+	\[= (A-B)' \Omega (A-B) + V_{\Omega^{-1}}\]
+	\[+B'\Omega(A-B) + (A-B)' \Omega B\]
+\end{frame}
+\begin{frame}{GMM: Optimal weight proof}
+	By definition, the cross term would be zero:
+	\[B' \Omega (A - B)\]
+	\[= (G' \Omega^{-1} G)^{-1} G' \Omega^{-1} \Omega (WG(G'WG)^{-1} - \Omega^{-1} G(G' \Omega^{-1} G)^{-1})\]
+	\[=(G' \Omega^{-1} G)^{-1} - (G' \Omega^{-1} G)^{-1} = 0\]
+	Therefore
+	\[V_W - V_{\Omega^{-1}} = (A-B)' \Omega (A-B) \ \ \text{is positive semi-definite}\]
+\end{frame}
+\begin{frame}{GMM: implication of positive semi-definiteness}
+	If $V_W - V_{\Omega}$ is positive semi-definite, then for any vector $c \in R^{dim g}$
+	\[c'V_Wc \geq c'V_{\Omega^{-1}} c\]
+	In particular
+	\[[V_W]_{(j,j)} \geq [V_{\Omega^{-1}}]_{(j,j)}\]
+	It means that the asymptotic variance of $\hat{\theta}^j_W \geq \hat{\theta}^j_{\Omega^{-1}}$
+\end{frame}
+\begin{frame}{GMM: Estimation of $\Omega$}
+	Optimal weight
+	\[Omega^{-1} = E[g(w,\theta_0)g(w,\theta_0)']^{-1}\]
+	is unknown and should be estimated  \\
+	By taking sample analog, $\Omega$ can be estimated by 
+	\[\hat{\Omega} = \frac{1}{n} \sum^n_{i=1} g(w_i, \hat{\theta}_W)g(w_i,\hat{\theta}_W)'\]
+	where $\hat{\theta}_W$ is some 1st step GMME
+\end{frame}
+\begin{frame}{GMM: Consistency of $\Omega$}
+	\begin{thm}
+		Suppose
+		\begin{enumerate}
+			\item $\hat{\theta}_W \rightarrow^p \theta_0$
+			\item $\sup_{\theta \in \mathcal{N}} |\frac{1}{n} \sum^n_{i=1} g(w_i,\theta) g(w_i, \theta)' - E[g(w,\theta) g(w,\theta)']| \rightarrow^p 0$
+			\item $E[g(w,\theta)g(w,\theta)']$ is continuous at $\theta_0$
+		\end{enumerate}
+		Then
+		\[\hat{\Omega} \rightarrow^p \Omega\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Two-step GMM}
+	\begin{enumerate}
+		\item Compute 1st-step GMME $\hat{\theta}_W$ by some $W_n$
+			\[\hat{\theta}_W = arg \min_{\theta \in \Theta} \bar{g}(\theta)' W_n \bar{g}(\theta)\]
+		\item Compute $\hat{\Omega}$
+		\item Compute two-step GMME by estimated optimal weight $\hat{\Omega}^{-1}$
+			\[\hat{\theta}_{(2)} = arg\min_{\theta \in \Theta} \bar{g}(\theta)'\hat{\Omega}^{-1} \bar{g}(\theta)\]
+	\end{enumerate}
+	Note that :
+	\begin{enumerate}
+		\item $\hat{\theta}_{(2)}$ is asymptotically more efficient than $\hat{\theta}_W$
+		\item Step 2-3 may be repeated(called repeated GMM)
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM: Hypothesis testing}
+	In this part, we would discuss
+	\begin{enumerate}
+			\item Specification test
+			\item Parameter hypothesis
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM: Specification test}
+	Test validity of overidentified moment restrictions 
+	\[H_0 : E[g(w,\theta)] = 0 \ \ \text{for some} \theta \in \Theta\]
+	\[H_1 : E[g(w,\theta) \neq 0 \ \ \text{for all} \theta \in \Theta\]
+\end{frame}
+\begin{frame}{Test statistic}
+	Test statistic(called J-statistic)
+	\[J = n \bar{g}(\hat{\theta}) \hat{\Omega}^{-1} \bar{g}(\hat{\theta})\]
+	Intuition: If the model is correct, $\bar{g}(\hat{\theta})$ has to be close to zero and $J$ also has to be close to zero \\
+	Asymptotic distribution
+	\[J \rightarrow^d \mathcal{X}^2(dim g - dim \theta) \ \ \text{under} \ \ H_0\]
+	\[J \rightarrow^p 0 \ \ \text{under} \ \  H_1\]
+\end{frame}
+\begin{frame}{Test statistic:proof for linear case}
+	PS5
+\end{frame}
+\begin{frame}{Parameter hypothesis}
+	Parameter hypothesis 
+	\[H_0:r(\theta_0) = 0 \ \ \text{vs.} \ \ H_1: r(\theta_0) \neq 0\]
+	Recall that 
+	\[\sqrt{n} (\hat{\theta} - \theta_0) \rightarrow^d N(0,V)\]
+	where
+	\[V = (G' \Omega G)^{-1}\]
+\end{frame}
+\begin{frame}{$r(\hat{\theta})$ distribution: delta method}
+	By expanding $r(\hat{\theta}$ around $\hat{\theta} = \theta_0$
+		\[r(\hat{\theta}) = r(\theta_0) + \frac{\partial r(\tilde{\theta})}{\partial \theta'} (\hat{\theta} - \theta_0)\]
+		for some $\tilde{\theta} \in [\hat{\theta},\theta_0]$ and thus
+		\[\sqrt{n}(r(\hat{\theta}) - r(\theta_0)) \rightarrow^d N(0,R'VR)\]
+		where
+		\[R' = \frac{\partial r(\theta_0)}{\partial \theta'}\]
+\end{frame}
+\begin{frame}{Wald statistic}
+	Based on the asymptotic distribution of $r(\hat{\theta})$, we can use the Wald statistic 
+	\[W = nr(\hat{\theta})'[\hat{R}'\hat{V} \hat{R}]^{-1} r(\hat{\theta})\]
+	Asymptotic distribution
+	\[W \rightarrow^d \mathcal{X}^2(dim r) \ \ under \ \ H_0\]
+	\[W \rightarrow \infty \ \ under \ \ H_1\]
+\end{frame}
+\begin{frame}{GMM distance statistic}
+	We can also consider likelihood ratio type test \\
+	In thsi case, the GMM objective function
+	\[J(\theta) = n\bar{g}(\theta)' \hat{\Omega}^{-1} \bar{g}(\theta)\]
+	plays the role as likelihood function \\
+	GMM distance statistic
+	\[LR = J(\tilde{\theta}) - J(\hat{\theta})\]
+	Asymptotic distribution
+	\[LR \rightarrow^d \mathcal{X}^2(dim r) \ \ under \ \ H_0 \]
+	\[LR \rightarrow \infty \ \ under \ \ H_1 \]
+	Asymptotically equivalent to Wald statistic
+\end{frame}
+\begin{frame}{Interval estimation}
+	\begin{enumerate}
+		\item Wald-type(or t-value) confidence interval
+			\[CI_W = [\hat{\theta}^{(j)} - z_{\frac{\alpha}{2}} \sqrt{\frac{[\hat{V}]_{jj}}{n}}, \hat{\theta}^{(j)} +z_{\frac{\alpha}{2}} \sqrt{\frac{[\hat{V}]_{jj}}{n}}]\]
+			\item LR-type confidence interval
+				\[CI_{LR} = \{c: LR(c) \leq \mathcal{X}^2_{\alpha}(1)\}\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Wald vs. LR}
+	\begin{enumerate}
+		\item $CI_W$ is computationally cheaper than $CI_{LR}$
+		\item However the shape of $CI_{LR}$ is more flexible.
+		\item LR test is invariant to the functional form of nonlinear hypothesis $H_0:r(\theta_0) =0$ but Wald is not invariant(e.g. $r(\theta_0) = \theta^{(1)}_0 \theta^{(2)}_0 - 1$ and $r(\theta_0) = \theta^{(1)}_0 - \frac{1} {\theta^{(2)}_0})$.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM:Conditional moment restriction}
+	So far, we consider unconditional moment restrictions
+	\[E[g(w_i,\theta_0)]=0\]
+	Example: Linear projection model
+	\[y_i = x'_i \theta_0 +e_i\]
+	\[E[x_ie_i] = 0\]
+which implies unconditional moment restriction
+\[E[g(w_i, \theta_0)] = E[x_i(y_i - x'_i \theta_0)] = 0\]
+\end{frame}
+\begin{frame}{GMM: GMM:Conditional moment restriction}
+	This model is just-identified and method of moments estimator is 
+	\[\hat{\theta} = (\sum^n_{i=1} x_i x'_i)^{-1} (\sum^n_{i=1} x_i y_i\]
+		which coincides with OLS estimator \\
+	By GMM theory, $\hat{\theta}$ is asymptotically semiparametric efficient regardless of heteroskedasticity.
+\end{frame}
+\begin{frame}{GLS estimator }
+	How about generalized least squares estimator? \\
+	Letting $\sigma^2_i = E[e^2_i|x_i]$, GLSE is 
+	\[\tilde{\theta}  = (\sum \sigma^{-2}_i x_i x'_i)^{-1} (\sum \sigma^{-2}_i x_i y_i)\]
+	\[ = \theta_0 + (\frac{1}{n} \sum \sigma^{-2}_i x_i x'_i)^{-1} (\frac{1}{n} \sum \sigma^{-2}_i x_i e_i)\]
+	\[\rightarrow^p \theta_0 + E[\sigma^{-2}_i x_i x'_i]^{-1} E[\sigma^{-2}_i x_i e_i]\]
+	In the projection model, we only assume $E[x_i e_i] =0$ which does not necessarily imply $E[\sigma^{-2}_i x_i e_i]=0$, therefore, GLSE may be inconsistent in the projection model.
+\end{frame}
+\begin{frame}{GMM: linear regression model}
+	Linear regression model
+	\[y_i = x'_i \theta_0 + e_i\]
+	\[E[e_i|x_i] = 0\]
+	This model implies conditional moment restriction which is stronger condition than unconditional moment restriction
+	\[E[h(w_i,\theta_0|x_i] = E[y_i-x'_i \theta_0|x_i] = 0\]
+\end{frame}
+\begin{frame}{GMM: linear regression model}
+	Conditional moment restriction $E[e_i|x_i]=0$ implies infinitely many unconditional moment restrictions in the form of $E[a(x_i)e_i]=0$ \\
+	Under $E[e_i|x_i]=0$, GLSE is consistent
+	therefore, we can write down the conditional moment restriction
+	\[E[h(w_i,\theta_0)|x_i]=0\]
+	For simplicity, assume dim$(h)=1$ \\
+	How can we estimate $\theta_o$ efficiently
+\end{frame}
+\begin{frame}{GMM: Conditional moment restrictions}
+	\[E[h(w_i,\theta_0)|x_i]=0 \]
+		imply
+		\[E[a(x_i) h(w_i,\theta_0)] =0 \ \ \text{for any } a(\cdot)\]
+	Based on unconditional moment restrictions, we can do GMM \\
+	Whcih $a(\cdot)$(also called intruments) should be chosen?
+\end{frame}
+\begin{frame}{Optimal instruments}
+	Pick some $a(\cdot)$. If assumptions for GMM are satisfied for the model $E[a(x_i) h(w_i,\theta_0)]=0$, asymptotic variance of GMME is 
+	\[asy.var(\hat{\theta}_a) = (G'_a \Omega^{-1}_a G_a)^{-1}\]
+	where
+	\[G_a = E[a(x_i) \frac{\partial h(w_i,\theta_0)}{\partial \theta'}\]
+		\[\Omega_a = E[a(x_i) a(x_i)' h(w_i,\theta_0)^2]\]
+		We choose $a(\cdot)$ to minimize asy.var($\hat{\theta}_a$) in positive semi-definite sense
+\end{frame}
+\begin{frame}{GMM: Optimal instruments}
+	\begin{thm}
+		For any $a(\cdots)$, it holds
+		\[(G'_a \Omega^{-1}_a G_a)^{-1} \geq (G'_* \Omega^{-1} G_*)^{-1}\]
+		Where
+		\[a^*(x_i) = E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i]E[h(w_i,\theta_0)^2|x_i]^{-1}\]
+		$a^*(x_i)$ is called optimal IV
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM: Optimal instruments proof}
+	Pick any $a(\cdot)$. Let 
+	\[h_i = h(w_i,\theta_0)\]
+	\[a_i = a(x_i)\]
+	\[H_i = E[\frac{\partial h(w_i,\theta_0)}{\partial \theta'}|x_i]\]
+	\[V_i = E[h(w_i,\theta_0)^2|x_i]\]
+	Then
+	\[V^{-1}_a = G'_a \Omega^{-1}_a G_a = E[a_i H_i]' E[a_i V_i a'_i]^{-1} E[a_i H_i]\]
+	\[V^{-1}_* = G'_* \Omega^{-1}_{*} G_* = E[a^{*}_i H_i]' E[a^{*}_i H_i] E[a^{*}_i V_i a^{*'}_i]^{-1}E[a^{*}_i H_i]\]
+	\[E[H'_i V^{-1}_i H_i]\]
+\end{frame}
+\begin{frame}{GMM: Optimal instruments proof}
+	Now define
+	\[m_i = G'_a \Omega^{-1}_a a_i h_i\]
+	\[m^*_i = a^*_i h_i\]
+	Then 
+	\[E[m_i m'_i] = G'_a \Omega^{-1}_a G_a = V^{-1}_a\]
+	\[E[m^*_i m^{*'}_i] = E[a^*_i V_i a^{*'}_i] = V^{-1}_*\]
+	\[E[m_i m^{*'}_i ] = G'_a \Omega^{-1}_a E[a_i V_i a^{*'}_i] = V^{-1}_a\]
+\end{frame}
+\begin{frame}{GMM: Optimal instruments proof}
+	Therefore, the difference in variance is written as
+	\[V_a - V_* \]
+	\[= V_aV^{-1}_aV_a - V_*\]
+	\[E[m_i m^{*'}_i ]^{-1} E[m_i m'_i]E[m^{*_i} m'_i ]^{-1} - E[m^*_im^{*'}_i]^{-1}\]
+	\[E[RR']\]
+	\[\geq 0\]
+	where
+	\[R =E[m_i m^{*'}_i ]^{-1} \{m_i - E[m_i m^{*'}_i ] E[m_i m^{*'}_i ]^{-1} m^*_i\}\]
+\end{frame}
+\begin{frame}{GMM: Optimal IV estimator}
+	Optimal IV is 
+	\[a^*(x_i) = E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i] E[h(w_i,\theta_0)^2|x_i]^{-1}\]
+	Note that 
+	\[dim(a^*(x_i)) = dim(\theta)\]
+	Thus optimal IV estimator is defined as method of moments estimator
+	\[\frac{1}{n} \sum^n_{i=1} a^*(x_i)h(w_i,\hat{\theta}_*) = 0\]
+\end{frame}
+\begin{frame}{GMM: Optimal IV estimator}
+	Suppose the GMM assumptions hold true then 
+	\[\sqrt{n}(\hat{\theta}_* 0 \theta_0) \rightarrow^d N(0,V_*)\]
+	where
+	\[V_* = E[E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i] E[h(w_i,\theta_0)^2|x_i]^{-1} E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i] ]^{-1}\]
+	and $\hat{\theta}_*$ is asympototically semiparametric efficient for conditional moment restriction model.
+\end{frame}
+\begin{frame}{GMM: Optimal IV estimator}
+	Since optimal IV is unknown, the optimal IV estimator is infeasible. \\
+	To estimate $a^*(x_i)$, we need to estimate conditional moments
+	\[E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i]\]
+	and
+	\[E[h(w_i,\theta_0)^2|x_i]\]
+	There are estimated by nonparametric regression, e.g. kernel regression.
+\end{frame}
+\begin{frame}{GMM: feasible IV estimator}
+	\begin{enumerate}
+		\item For each $c$, $a^*(c)$ is nonparametrically estimated , we can compute $\hat{a}(x_1) \cdots \hat{a}(x_n)$
+		\item Feauble optimal IV estimator solves
+			\[\frac{1}{b} \sum^n_{i=1} \hat{a}^*(x_i)h(w_i,\tilde{\theta}_*)=0\]
+	\end{enumerate}
+	$\tilde{\theta}$ is asymptotically equivalent to infeasible version $\hat{\theta}_*$
+\end{frame}
+\begin{frame}{Optimal IV: Linear regress model}
+	\[a^*(x_i) = -x_iE[e^2_i|x_i]^{-1}\]
+	\[= -\sigma^{-2}_i x_i\]
+	Optimal IV GMME solves
+	\[0 = \frac{1}{n} \sum^n_{i=1} a^*(x_i) h(w_i,\hat{\theta}_*)\]
+	Thus
+	\[\hat{\theta}_* = (\sum^n_{i=1} \sigma^{-2}_i x_ix'_i)^{-1}(\sum^n_{i=1} \sigma^{-2}_i x_i y_i)\]
+\end{frame}
 \end{document}
