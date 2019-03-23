@@ -1,0 +1,748 @@
+\documentclass{beamer} 
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[ruled,longend]{algorithm2e}
+\newtheorem*{dfn}{Definition}
+\newtheorem{thm}{Theorem}[subsection]
+ \renewcommand{\thethm}{\arabic{thm}}
+%\newtheorem{lemma}{Lemma}
+\title[Introduction]{Statistics Learning Theory:Generalized Method of Moments}
+\author{}
+\institute{}
+\date{2019.03.23}
+ 
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+\section{GLS estimator}
+\begin{frame}{GLS estimator}
+	Suppose the linear regression model
+	\[y_i = x'_i \beta + e_i \]
+	\begin{enumerate}
+	\item $E[e_i|x_i]=0$
+	\item $\{(y_i,x_i)\}$ iid
+	\item $E[y^2_i]	< \infty$
+	\item $E|x_i|^2 < \infty$
+	\item $E[x_i x'_i] $ is positive definite
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GLS estimator}
+Since 
+\[\hat{\beta} - \beta = (X'X)^{-1}X'e\]
+We have
+\[Var(\hat{\beta}|X) = E[(X'X)^{-1}X'ee'X(X'X)^{-1}|X]\]
+\[= (X'X)^{-1} X'DX(X'X)^{-1}\]
+Where
+\[D = E[ee'|X] = \begin{bmatrix}
+				\sigma^2_{1} & 0 & \dots & 0 \\
+				0 & \sigma^2_{2} & \dots & 0 \\
+				\vdots & \vdots & \ddots  \\ 
+				0 & 0 & \dots & \sigma^2_n
+\end{bmatrix}\]
+where
+\[\sigma^2_i =  E[e^2_i|x_i]\]
+\end{frame}
+\begin{frame}{Gauss Markov Theorem}
+	\begin{thm}
+		In linear regression model, the best unbiased linear estimator is
+	\[\tilde{\beta} = (X'D^{-1}X)^{-1} )X'D^{-1}y\]
+	\end{thm}
+	Where $\tilde{\beta}$ is called generalized least square(GLS)
+	The best means that 
+	\[Var(\tilde{\beta}) - Var(\hat{\beta})\]
+	is positive semi-definite
+\end{frame}
+\begin{frame}{Homoscedastic}
+	if $\sigma_1 = \sigma_2 =  \dots = \sigma_n  = \sigma$
+	then 
+	\[D^{-1} = \frac{1}{\sigma^2} I \]
+	\[\tilde{\beta} = (X'X)^{-1} X' y\]
+	Which is coincide with OLS estimator
+\end{frame}
+
+\section{Solution of last week}
+\begin{frame}{Exercise 1:Nonlinear regression model}
+	Consider the following model
+	\[y_i = x^{\beta}_i + e_i \ \ E[e_i|x_i]=0 \ \ x_i >0 \ \ \text{is scalar}\]
+	We aim to solve 
+	\begin{enumerate}
+		\item Write down the asymptotic distribution of the NLLS estimator $\hat{\beta}$.
+		\item Let $\theta = \sqrt{\beta}$. Find the 95\% asymptotic confidence interval for $\theta$
+		\item Let $m(c) = E[y_i|x_i=c]$ be the conditional mean at $c$. Find the 95\% asymptotic confidence interval for $m(c)$.
+		\item Suppose $\sigma^2_i = E[e^2_i|x_i]$ is known. Find a better estimator than the NLLS estimator $\hat{\beta}$. Explain briefly why it is better.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Nonlinear regression model:(a)}
+	In the part, we want to apply the general theorem for asymptotic distribution, under the suitable conditions, we know that 
+	\[\sqrt{n}(\hat{\beta} - \beta_0) \rightarrow^d N(0,H^{-1} \Sigma H^{-1})\]
+	Where
+	\[H = E[\frac{\partial m(x,\theta_0)}{\partial \theta} \frac{\partial m(x, \theta_0)}{ \partial \theta'}]\]
+	\[\Sigma = E[e^2 \frac{\partial m(x,\theta_0)}{\partial \theta} \frac{\partial m(x, \theta_0)}{ \partial \theta'}]\]
+	Since 
+	\[\frac{\partial m(x,\beta_0)}{\partial \beta} = x^{\beta_0} \log x\]
+	Therefore,
+\[\sqrt{n}(\hat{\beta} - \beta_0) \rightarrow^d \]
+\[ N(0, (E[x^{2\beta_0} (\log x)^2])^{-1} E[e^2[x^{2\beta_0} (\log x)^2] E[x^{2\beta_0} (\log x)^2])^{-1})\]
+
+\end{frame}
+\begin{frame}{Nonlinear regression model:(b)}
+	Using the delta method, that is the Taylor expansion
+	\[\theta = f(\hat{\beta}) = f(\beta_0) + \frac{\partial f(\beta)}{\partial \beta}(\tilde{\beta}) (\hat{\beta}\beta - \beta_0)\]
+	where $\tilde{\beta}$ is on the line between $\hat{\beta}$ and $\beta_0$, therefore
+	\[\sqrt{n}(\theta - \theta_0) = \frac{\partial f(\beta)}{\partial \beta}(\tilde{\beta}) \sqrt{n}(\hat{\beta} - \beta_0)\]
+	The consistency of $\hat{\beta}$ implies $\tilde{\beta} \rightarrow^p \beta_0$, therefore
+	\[\sqrt{n}(\theta - \theta_0) \rightarrow^d N(0,\frac{1}{4\beta_0} V)\]
+	where
+\[V = E[x^{2\beta_0} (\log x)^2])^{-1} E[e^2[x^{2\beta_0} (\log x)^2] E[x^{2\beta_0} (\log x)^2])^{-1}\]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(b)} 
+	Therefore, the 95 \% confidence interval can be constructed as
+	\[ [\hat{\theta} - z_{0.025} \sqrt{\frac{\hat{V}}{4 \hat{\beta}_n}}, \hat{\theta} + z_{0.025} \sqrt{\frac{\hat{V}}{4 \hat{\beta}_n}}]\]
+	where
+	\[\hat{V} = (\frac{1}{n} \sum^n_{i=1} x^{2\hat{\beta}}_i(\log x_i)^2)^{-1} (\frac{1}{n} \sum^n_{i=1} \hat{e}^2_i x^{2\hat{\beta}}_i(\log x_i)^2)(\frac{1}{n} \sum^n_{i=1} x^{2\hat{\beta}}_i(\log x_i)^2)^{-1} \]
+	\[\hat{e}_i = y_i - x^{\hat{\beta}}_i\]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(c)}
+Since $m(c) = c^{\beta}$ and 
+\[\frac{\partial c^{\beta}}{\partial \beta} = c^{\beta} \log c\]
+Using the delta method, we can get 
+\[\sqrt{n}(\hat{m(c)} - m(c)) \rightarrow^d N(0,c^{2\beta} (\log c)^2 V) \]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(d)}
+	Consider the GLS-type NLLS in the presence of known heteroscedasticity
+	\[\frac{y_i}{\sigma_i} = \frac{x^{\beta}_i}{\sigma_i} + u_i \ \ u_i = \frac{e_i}{\sigma}\]
+	Therefore, $E[u^2_i|x_i] = 1$ which restoreshomoscedasticity. The estimator can be defined as 
+	\[\hat{\beta}_{GLS} = arg\min_{\beta} \sum^n_{i=1} (\frac{y_i}{\sigma_i} - \frac{x^{\beta}_i}{\sigma})^2\]
+	We can derive the asympototic distribution as part(a) by changing $m(x,\beta) = \frac{x^{\beta}_i}{\sigma}$
+	\[\sqrt{n}(\hat{\beta_{GLS}} - \beta) \rightarrow^d N(0,H^{-1}\Sigma H^{-1})\]
+\end{frame}
+\begin{frame}{Nonlinear regression model:(d)}
+	Where
+	\[H = E[\frac{x^{2 \beta_0}_i (\log x_i)^2}{\sigma^2_i}]\]
+	\[\Sigma = E[\frac{x^{2 \beta_0}_i (\log x_i)^2}{\sigma^2_i}]\]
+	Therefore
+	\[V_{GLS} = (E[\frac{x^{2 \beta_0}_i (\log x_i)^2}{\sigma^2_i}])^{-1}\]
+\end{frame}
+\begin{frame}{Exercise 2}
+	Let $f_n$ be a sequence of functions on $S \in R$ such that $\sup_{x \in S} |f_n(x) - f(x)| \rightarrow 0$ \\
+	(a): show that $\sup_{x \in S} f_n(x) \rightarrow \sup_{x \in S} f(x)$ \\
+	(b): show that $\inf_{x \in S} f_n(x) \rightarrow \inf_{x \in S} f(x)$
+\end{frame}
+\begin{frame}{Exercise 2: (a)}
+	Since $\sup_{x \in S} |f_n(x) - f(x)| \rightarrow 0$, therefore, given $\varepsilon >0$, there exists $N>0$ such that $n > N$ then
+	\[\sup_{x \in S} |f_n(x) - f(x)| < \frac{\varepsilon}{2}\]
+	which implies that $\frac{-\varepsilon}{2}< f(x) - f(x) < \frac{\varepsilon}{2} \ \ \forall x \in S$\\
+	(a): By the definition of supremum, there exists $x_{1n},x_{2n} \in S$ such that
+	\[f_n(x_{1n}) + \frac{\varepsilon}{2} > \sup_{x \in S} f_n(x)\]
+	\[f(x_{2n}) + \frac{\varepsilon}{2} > \sup_{x \in S} f(x)\]
+\end{frame}
+\begin{frame}{Exercies 2: (a)}
+	Therefore, given $n>N$, we have
+	\[ f_n(x_{1n}) + \frac{\varepsilon}{2} - f(x_{1n})> \sup_{x \in S} f_n(x) - \sup_{x \in S} f(x) > f_(x_{2n}) - f(x_{2n}) - \frac{\varepsilon}{2}\]
+	where
+	\[f_n(x_{1n}) + \frac{\varepsilon}{2} - f(x_{1n}) < \varepsilon\]
+	\[f_(x_{2n}) - f(x_{2n}) - \frac{\varepsilon}{2} > - \varepsilon\]
+	Therefore
+	\[\sup_{x \in S} f_n(x) \rightarrow \sup_{x \in S} f(x)\]
+\end{frame}
+\begin{frame}{Exercise 2:(b)}     
+	(b) Using the similar technique, we have 
+	\[\frac{-\varepsilon}{2}< f(x) - f(x) < \frac{\varepsilon}{2} \ \ \forall x \in S\]
+	\[\inf_{x \in S} f_n(x) > f_n(x_{1n}) - \frac{\varepsilon}{2}\]
+	\[\inf_{x \in S} f(x) > f(x_{2n}) - \frac{\varepsilon}{2}\]
+	Therefore
+	\[f_n(x_{2n}) - f(x_{2n}) + \frac{\varepsilon}{2} > \inf_{x \in S} f_n(x) - \inf_{x \in S} f(x) > f_n(x_{1n}) - f(x_{1n}) - \frac{\varepsilon}{2}\]
+	It is a desired result.
+\end{frame}
+\begin{frame}{Exercise 3:linearized  estimator}
+	Let $\hat{\theta} = arg\max_{\theta \in \Theta} Q_n(\theta)$ be an extremum estimator of a scalar parameter $\theta_0$, and $\hat{\theta}$ be a preliminary estimator of $\theta_0$ such that $\sqrt{n}(\bar{\theta}-\theta_0) = O_p(1)$. Consider the following 'linearized' estimator of $\theta_0$:
+	\[\tilde{\theta} = \bar{\theta} - (\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}) \]
+	Find the asympotic distribution of $\tilde{\theta}$ 
+\end{frame}
+\begin{frame}{Exercise 3: Solution}
+	By the definition , we have that 
+	\[\sqrt{n}(\tilde{\theta} - \theta_0) = \sqrt{n}(\tilde{\theta} - \bar{\theta}) + \sqrt{n}(\bar{\theta} - \theta_0)\]
+	\[ = -\sqrt{n}(\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}) + (\sqrt{n}(\bar{\theta} - \theta_0)\]
+		By Taylor Expansion, we can obtain that 
+		\[\frac{\partial Q_n(\bar{\theta})}{\partial \theta}  = \frac{\partial Q_n(\theta_0)}{\partial \theta} + \frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2}(\bar{\theta} - \theta_0)\]
+		Therefore
+		\[\bar{\theta} - \theta_0 = (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}  -  \frac{\partial Q_n(\theta_0)}{\partial \theta})\]
+\end{frame}
+\begin{frame}{Exercies 3: Solution}
+	Substitute the above, we have that 
+	\[\sqrt{n}(\tilde{\theta} - \theta_0)\]
+	\[=-\sqrt{n}(\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta})+ \sqrt{n} (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} (\frac{\partial Q_n(\bar{\theta})}{\partial \theta}  -  \frac{\partial Q_n(\theta_0)}{\partial \theta})\]
+\[= -\sqrt{n} (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1}\frac{\partial Q_n(\theta_0)}{\partial \theta} \]
+\[+\sqrt{n}\frac{\partial Q_n(\bar{\theta})}{\partial \theta} (\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} - (\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1}) \]
+\[ = (I) + (II)\]
+\end{frame}
+\begin{frame}{Exercies 3: Solution}
+	Since $\bar{\theta} \rightarrow^p \theta$, we know that $\theta_B \rightarrow^p \theta_0$, therefore
+	\[(I) \rightarrow^d N(0,H(\theta_0)^{-2} \Sigma)\]
+	We claim that the second term would converge to zero in probability, since
+\[(II) \leq |\sqrt{n}\frac{\partial Q_n(\bar{\theta})}{\partial \theta}| |(\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} - (\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1}|\]
+Since both 
+\[(\frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2})^{-1} \rightarrow^p H(\theta_0)^{-1}\]
+\[(\frac{\partial^2 Q_n(\bar{\theta})}{\partial \theta^2})^{-1} \rightarrow^p H(\theta_0)^{-1}\]
+\end{frame}
+\begin{frame}{Exercies 3: Solution}
+	The second term in inequality would be $o_p(1)$, now, turning to the first term
+	\[|\sqrt{n}\frac{\partial Q_n(\bar{\theta})}{\partial \theta}|\]
+\[ = \sqrt{n} |(\frac{\partial Q_n(\theta_0)}{\partial \theta} + \frac{\partial^2 Q_n(\theta_B)}{\partial \theta^2} (\bar{\theta} - \theta_0)|\]
+\[\leq \sqrt{n} |\frac{\partial Q_n(\theta_0)}{\partial \theta}| \leq \frac{\partial^2 Q_n(\theta_B)}{\partial\theta^2} (\bar{\theta} - \theta_0)|\]
+\[ = O_p(1) + O_p(1) = O_p(1)\]
+Therefore,
+\[(II) \leq o_p(1) O_p(1) = o_p(1)\]
+\end{frame}
+
+\section{GMM}
+\begin{frame}{GMM: Introduction}
+	GMM is one of the most popular estimation method in applied econometrics. GMM generalizes the classical method of moments estimator by allowing for models that have more equations than unknown parameters and are thus overidentified. GMM includes as special cases OLS,IV, multivariate regression, and 2SLS.  
+\end{frame}
+\begin{frame}{GMM: : Linear case}
+	Consider linear projection model
+	\[y_i = x'_{1i} \beta_1 + x_{2i} \beta_2 + e_i\]
+	\[E\begin{bmatrix}
+		x_{1i} e_i \\	
+		x_{2i} e_i
+		\end{bmatrix} =0
+		\]
+	\begin{enumerate}
+		\item This model can be estimated by OLS.
+		\item Now suppose we know that a priori that $\beta_2=0$. Then model becomes 
+			\[y_i = x'_{1i} \beta_1 + e_i\]
+			\[E \begin{bmatrix}
+				x_{1i} e_i \\	
+				x_{2i} e_i
+				\end{bmatrix}
+				=0\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM: : Linear case}
+	\begin{enumerate}
+			\item How do we estimate $\beta_1$?
+			\item One may estimate $\beta_1$ by OLS from $y$ on $x_1$ which utilize information $E[x_{1i} e_i] = 0$
+			\item But this is not necessarily efficient because it does not use additional information $E[x_{2i} e_i]=0$
+			\item In this model, the number of parameters is dim$\beta_1 = k$ but the number of moment restrictions is dim$x_1+$ dim$x_2 = k+r$ 
+			\item Such situation is called overidentified
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Moment restriction model}
+	\begin{enumerate}
+\item In general we consider	
+\[E[g(w_i,\beta)]=0\]
+where $\beta$ us k-dimenstional parameters and $g$ is $l$-dimensional vector of functions with $l \geq k$ 
+\item Above example is 
+	\[g(w_i,\beta) = x_i(y_i - x'_{1i} \beta_1)\]
+	where $x_i = (x'_{1i}, x'_{2i})'$
+\end{enumerate}
+\end{frame}
+\begin{frame}{GMM estimator}
+	To generalize, consider linear model
+	\[y_i = x'_i \beta + e_i\]
+	\[E[z_i e_i] = 0\]
+\begin{enumerate}
+	\item If dim $g= $  dim $\beta$( called just identification), then we can apply method of moments that solves $\bar{g} = \frac{1}{n} \sum^n_{i=1} g(w_i,\beta) = 0$
+	\item But if dim $g > $ dim $\beta $(overidentified), we cannot solve this equation in general
+\end{enumerate}
+\end{frame}
+\begin{frame}{GMM estimator}
+	\begin{enumerate}
+	\item For overidentified case, we can minimize weighted Euclidean norm
+	\[J_n(\beta) = n\bar{g}(\beta)' W_n \bar{g}(\beta)\]
+where $W_n$ is symmetric weight matrix
+	\item Minimizer of this object is called Generalized method of moments(GMM) estimator
+		\[\hat{\beta} = arg \min_{\beta} J_n(\beta)\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM:estimator}
+	In the linear model
+	\[\bar{g}(\beta) = \frac{1}{n} \sum^n_{i=1} z_i (y_i - x'_i \beta) = \frac{1}{n} Z'(y-X\beta)\]
+	So, FOC of $\hat{\beta}$ is 
+	\[0 = \frac{\partial J_n(\hat{\beta})}{\partial \beta} = 2n (\frac{\partial \bar{g}(\hat{\beta})}{\partial \beta'})' W_n \bar{g}(\hat{\beta})\]
+	\[= -2n(\frac{1}{n} X' Z) W_n (\frac{1}{n} Z'(y - X \hat{\beta}))\]
+	Solbing for $\hat{\beta}$ yields
+	\[\hat{\beta} = (X'ZW_n Z' X)^{-1} X'ZW_nZ'y\]
+\end{frame}
+\begin{frame}{GMM: Asymptotic distribution of $\hat{\beta}$}
+	Note that 
+	\[\hat{\beta} = \beta + (X'ZW_n Z' X)^{-1} X'ZW_nZ' e\]
+	and thus
+	\[\sqrt{n} (\hat{\beta} - \beta) - [(\frac{1}{n} X' Z) W_n (\frac{1}{n} Z'X)]^{-1} (\frac{1}{n} X'Z) W_n (\frac{1}{\sqrt{n}} Z' e)\]
+	By LLN and CLT under certain assumption
+	\[\frac{1}{n} Z'X \rightarrow^p E[z_ix'_i] :=Q\]
+	\[\frac{1}{\sqrt{n}} Z'e \rightarrow^d N(0, \Sigma)\]
+	Where $\Sigma = E[e^2_i z_i z'_i]$
+\end{frame}
+\begin{frame}{GMM:estimator}
+	Suppose $W_n \rightarrow^p W$ for positive definite symmetric $W$. By CMT
+	\[\sqrt{n} (\hat{\beta} - \beta) \rightarrow^d N(0,V_W)\]
+	where $V_W = (Q'WQ)^{-1} Q'W\Sigma WQ(Q'WQ)^{-1}$ \\
+	Asympototic variance $V_W$ depends on weight $W$. This is minimized by choosing
+	\[W^* = \Sigma^{-1}\]
+	which implies $V_{W^*} = (Q'\Sigma^{-1}Q)^{-1}$ 
+\end{frame}
+\begin{frame}{GMM:Linear Case}
+	To show that 
+	\[W^* = \Omega^{-1}\]
+	We note that the asympototic of $\hat{\beta}_{GMM}$ is
+	\[V = (Q'WQ)^{-1} Q'W\Omega WQ(Q'WQ)^{-1}\]
+	We will prove the following statements
+	\begin{enumerate}
+		\item Let $V_0$ be the matrix when $W = \Omega^{-1}$. Show that $V_0 = (Q'\Omega Q)^{-1}$
+		\item We want to show that for any $W$, $V - V_0$ is positive semi-definite, to do this, finding matrices $A$ and $B$ such that $V = A' \Omega A$ and $V_0 = B'\Omega B$
+		\item Show that $B' \Omega A = B'\Omega B$ and therefore that $B' \Omega (A-B) = 0$
+		\item Use the expressions $V=A'\Omega A$,  $A=B+(A-B)$ and $B' \Omega(A-B)=0$ to show that $V \geq V_0$
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM:Linear Case}
+1 is straightforward:
+\[V_0 = (Q'\Omega^{-1}Q)^{-1} Q'\Omega^{-1} \Omega \Omega^{-1} Q(Q'\Omega^{-1}Q)^{-1}\]
+2 is 
+\[A = WQ(Q'WQ)^{-1}\]
+\[B = \Omega^{-1}Q(Q'\Omega^{-1}Q)^{-1}\]
+3 is simply by pluging in \\
+4
+\[V = A' \Omega A \]
+\[=[B+(A-B)]' \Omega[B+(A-B)]\]
+\[= V_0 + (A-B)'\Omega (A-B)\]
+Which implies that $V-V_0$ is positive-definite
+\end{frame}
+\begin{frame}{GMM:Estimation of $\Omega$}
+	We don't know the true value of $\Omega$, how to estimate it?
+	Take the model $y_i = x'_i \beta +e_i$ with $E(z_i e_i)=0$. Let $\tilde{e}_i = y_i - x'_i \tilde{\beta}$, where $\tilde{\beta}$ is consistent for $\beta$. Define an estimate of the optimal GMM weight matrix
+	\[\hat{W} = (\frac{1}{n} \sum^n_{i=1} z_iz'_i \tilde{e}^2_i)^{-1}\]
+	Show that $\hat{W} \rightarrow^p \Omega^{-1}$ where $\Omega = E[z_iz'_ie^2_i)$
+\end{frame}
+\begin{frame}{GMM:Estimation of $\Omega$}
+	By continuous mapping theorem, we only need to show that 
+\[\frac{1}{n} \sum^n_{i=1} z_iz'_i \tilde{e}^2_i)^{-1} \rightarrow^p \Omega\]
+
+\end{frame}
+\begin{frame}{GMM: General case}
+	Moment restriction model
+	\[E[g(w_i,\theta_0)] = 0\]
+	Here $g$ could be nonlinear \\
+	GMM estimator
+	\[\hat{\theta}_W = arg \min_{\theta \in \Theta} \bar{g}(\theta)' W_n \bar{g}(\theta)\]
+\end{frame}
+\begin{frame}{GMM: Consistency}
+	\begin{thm}
+		Suppose
+		\begin{enumerate}
+		\item $\Theta$ is compact
+		\item $W_n \rightarrow^p W$ and $W$ is symmetric and positive semi-definite
+		\item $g(w,\theta)$ is almost surely continuous at each $\theta \in \Theta$
+		\item $E[\sup_{\theta \in \Theta} |g(w,\theta)|] < \infty$
+		\item $WE[g(w,\theta)] = 0$ only if $\theta = \theta_0$
+		\end{enumerate}
+		Then
+		\[\hat{\theta}_W \rightarrow^p \theta_0\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Recall:Consistency Theorem}
+	\begin{thm}[General Consistency Theorem]
+		Suppose
+		\begin{enumerate}
+				\item $\Theta$ is compact
+				\item $\sup_{\theta \in \Theta} |Q_n(\theta) - Q_{*} (\theta)| \rightarrow^p 0$ for some $Q_*:\Theta \rightarrow R$
+				\item $Q_*$ is continuous in $\theta \in \Theta$
+				\item $Q_*$ is uniquely maximized at $\theta_0$
+		\end{enumerate}
+		Then 
+		\[\hat{\theta} \rightarrow^p \theta_0\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Recall: Uniform law of large number}
+	\begin{thm}
+		\begin{enumerate}
+				\item $\Theta$ is compact
+				\item $g(z,\theta)$ is almost surely continuous at each $\theta \in \Theta$
+				\item There is $d(z)$ such that $|g(z,\theta) \leq d(z)$ for all $\theta \in \Theta$ and almost every $z$ and $E[d(z)] < \infty$
+		\end{enumerate}
+		Then 
+		\[\sup_{\theta \in \Theta} |\bar{g}(\theta) - E[g(z,\theta)]| \rightarrow^p 0\]
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM: Consistency proof}
+	It is sufficient to check the conditions $1-4$ in general theorem. \\
+	Condition 1 is guaranteed by (i) \\
+	For Condition 2, let
+	\[Q_*(\theta) = -E[g(z,\theta)]'WE[g(z,\theta)]\]
+	By triangle inequality
+	\[|Q_n(\theta) - Q_*(\theta)|\]
+	\[\leq |\{\bar{g}(\theta) - E[g(z,\theta)]\}' \hat{W} \{\bar{g}(\theta) - E[g(z,\theta)]\}|\]
+	\[+|E[g(z,\theta)]'(\hat{W} + \hat{W}') \{\bar{g}(\theta) - E[g(z,\theta)]\}|\]
+	\[+|E[g(z,\theta)]'(\hat{W} - W)E[g(z,\theta)]|\]
+	\[T_1(\theta) + T_2(\theta) + T_3(\theta)\]
+\end{frame}
+\begin{frame}{GMM:Consistency proof}
+	By the uniform law of large numbers(ULLN)
+	\[\sup_{\theta \in \Theta} |\bar{g}(\theta) - E[g(z,\theta)]| \rightarrow^p 0\]
+	implies $\sup_{\theta \in \Theta} T_1(\theta) \rightarrow^p 0 $ and $\sup_{\theta \in \Theta} T_2(\theta) \rightarrow^p 0 $
+	This condition is guaranteed by (i),(iii),(iv). \\
+	Also from (ii), we obtain $\sup_{\theta \in \Theta} T_3(\theta) \rightarrow^p 0$, therefore, the condition 2 is guaranteed.
+\end{frame}
+\begin{frame}{GMM:Consistency proof}
+	Also ULLN presented above implies $E[g(z,\theta)]$ is continuous in $\theta$, thus $Q_n(\theta)$ is continuous in $\theta$. The condition 3 is verified. \\
+	Since $E[g(z,\theta_0)]=0$, it holds $Q_*(\theta_0)=0$, thus it is sufficient to show
+	\[Q_*(\theta) < 0\]
+	for all $\theta \neq \theta_0$. Since $W$ is symmetric and positive semi-definite, we can take $R$ such that 
+	\[W = R'R\]
+	Any $\theta \neq \theta_0$. (v) implies 
+	\[0 \neq WE[g(z,\theta) = R'RE[g(z,\theta)]\]
+		Which implies $RE[g(z,\theta)] \neq 0$
+		Therefore
+		\[Q_*(\theta) = -\{RE[g(z,\theta)]\}' \{RE[g(z,\theta)]\}<0\]
+		The condition 4 is verified.
+\end{frame}
+\begin{frame}{Recall: General Asymptotic Normality Theorem:Basic Idea}
+	Now consider asymptotic distribution of extremum estimator
+	\[Q_n(\theta) = \text{some objective function}\]
+	\[\hat{\theta} = arg \max_{\theta \in \Theta} Q_n(\theta)\]
+	Assume consistency $\hat{\theta} \rightarrow^p \theta_0$ \\
+	We want to derive asymptotic normal distribution in the form of 
+	\[\sqrt{n} (\hat{\theta} - \theta_0) \rightarrow^d N(0,V)\] 
+	The result can be used to construct confidence interval or to conduct hypothesis testing
+\end{frame}
+\begin{frame}{Recall: General Asymptotic Normality Theorem}
+	\begin{thm}
+		Suppose
+		\begin{enumerate}
+			\item $\hat{\theta} \rightarrow^p \theta_0$ and $\theta_0 \in int\Theta$
+			\item $Q_n(\theta)$ is twice continuously differentiable in a neighborhood $\mathcal{N}$ of $\theta_0$
+			\item $\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta} \rightarrow^d N(0,\Sigma)$	
+			\item There exists $H(\theta)$ that is continuous at $\theta_0$,
+				\[\sup_{\theta \in \mathcal{N}} |\frac{\partial^2 Q_n(\theta)}{\partial \theta \partial \theta'} - H(\theta)| \rightarrow^p 0\]
+				and $H = H(\theta_0)$ is nonsingular 
+		\end{enumerate}
+	Then
+	\[\sqrt{n}(\hat{\theta} - \theta_0) \rightarrow^d N(0,H^{-1}\Sigma H^{-1})\]
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM:Asymptotic normality}
+	Let
+	\[Q_n(\theta) = -\frac{1}{2} \{\frac{1}{n} \sum^n_{i=1} g(z_i,\theta)\}' \hat{W} \{\frac{1}{n} \sum^n_{i=1} g(z_i,\theta)\}\]
+	Let us apply general asymptotic normality theorem
+\end{frame}
+\begin{frame}{GMM:Asymptotic normality}
+	\begin{thm}
+		Suppose 
+		\begin{enumerate}
+				\item $\theta_0 \in int \Theta$
+				\item $g(w, \theta)$ is twice continuously differe ntiable in a neighborhood $\mathcal{N}$ of $\theta_0$ with probability one
+				\item $E[|g(w,\theta_0)|^2] < \infty$ and $E[\sup_{ \theta \in \mathcal{N}} | \frac{\partial^2 g^{(j)}(z,\theta)}{\partial \theta \partial \theta'}|] < \infty$
+				\item $G'WG$ is nonsingular where $G = E[\frac{\partial g(w,\theta_0)}{\partial \theta'}]$
+		\end{enumerate}
+		Then
+		\[\sqrt{n}(\hat{\theta} - \theta_0) \rightarrow^d N(0,(G'WG)^{-1} G'W\Omega WG(G'WG)^{-1})\]
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM:Asymptotic normality proof}
+	It is enough to check conditions for general asymptotic normality theorem. Condition 1 is already verified. The condition 2 is satisfied by (ii).\\
+	In this case, condition 3 is verified as 
+	\[\sqrt{n} \frac{\partial Q_n(\theta_0)}{\partial \theta}  =(\frac{1}{n} \sum^n_{i=1} \frac{\partial g(z_i,\theta_0)}{\partial \theta'})' \hat{W} (\frac{1}{\sqrt{n}} \sum^n_{i=1} g(z_i,\theta_0))  \]
+		\[\rightarrow^d N(0,G'W\Omega WG)\]
+
+	Where convergence follows from LLN and CLT with (iii)-(iv)
+\end{frame}
+\begin{frame}{GMM: Optimal weight}
+	Based on the asymptotic variance of $\hat{\theta}_W$
+\[V_W = (G'WG)^{-1} G'W\Omega WG(G'WG)^{-1})\]
+we can find an optimal $W$ to minimize the asymptotic variance in the positive definite sense
+\begin{thm}
+	For any $W$ with nonsingular $G'WG$, it holds 
+	\[V_W - V_{\Omega^{-1}} \ \ \text{is positive semi-definite}\]
+	where
+	\[V_{\Omega^{-1}} = (G'\Omega^{-1}G)^{-1}\]
+\end{thm}
+\end{frame}
+\begin{frame}{GMM: optimal weight proof}
+	Let 
+	\[A = WG(G'WG)^{-1}\]
+	\[B = \Omega^{-1} G(G' \Omega^{-1} G)^{-1}\]
+	Then
+	\[V_W = A' \Omega A\]
+	\[V_{\Omega^{-1}} = B' \Omega B\]
+	Note that
+	\[V_W = (A-B+B)' \Omega(A-B+B)\]
+	\[= (A-B)' \Omega (A-B) + V_{\Omega^{-1}}\]
+	\[+B'\Omega(A-B) + (A-B)' \Omega B\]
+\end{frame}
+\begin{frame}{GMM: Optimal weight proof}
+	By definition, the cross term would be zero:
+	\[B' \Omega (A - B)\]
+	\[= (G' \Omega^{-1} G)^{-1} G' \Omega^{-1} \Omega (WG(G'WG)^{-1} - \Omega^{-1} G(G' \Omega^{-1} G)^{-1})\]
+	\[=(G' \Omega^{-1} G)^{-1} - (G' \Omega^{-1} G)^{-1} = 0\]
+	Therefore
+	\[V_W - V_{\Omega^{-1}} = (A-B)' \Omega (A-B) \ \ \text{is positive semi-definite}\]
+\end{frame}
+\begin{frame}{GMM: implication of positive semi-definiteness}
+	If $V_W - V_{\Omega}$ is positive semi-definite, then for any vector $c \in R^{dim g}$
+	\[c'V_Wc \geq c'V_{\Omega^{-1}} c\]
+	In particular
+	\[[V_W]_{(j,j)} \geq [V_{\Omega^{-1}}]_{(j,j)}\]
+	It means that the asymptotic variance of $\hat{\theta}^j_W \geq \hat{\theta}^j_{\Omega^{-1}}$
+\end{frame}
+\begin{frame}{GMM: Estimation of $\Omega$}
+	Optimal weight
+	\[Omega^{-1} = E[g(w,\theta_0)g(w,\theta_0)']^{-1}\]
+	is unknown and should be estimated  \\
+	By taking sample analog, $\Omega$ can be estimated by 
+	\[\hat{\Omega} = \frac{1}{n} \sum^n_{i=1} g(w_i, \hat{\theta}_W)g(w_i,\hat{\theta}_W)'\]
+	where $\hat{\theta}_W$ is some 1st step GMME
+\end{frame}
+\begin{frame}{GMM: Consistency of $\Omega$}
+	\begin{thm}
+		Suppose
+		\begin{enumerate}
+			\item $\hat{\theta}_W \rightarrow^p \theta_0$
+			\item $\sup_{\theta \in \mathcal{N}} |\frac{1}{n} \sum^n_{i=1} g(w_i,\theta) g(w_i, \theta)' - E[g(w,\theta) g(w,\theta)']| \rightarrow^p 0$
+			\item $E[g(w,\theta)g(w,\theta)']$ is continuous at $\theta_0$
+		\end{enumerate}
+		Then
+		\[\hat{\Omega} \rightarrow^p \Omega\]
+	\end{thm}
+\end{frame}
+\begin{frame}{Two-step GMM}
+	\begin{enumerate}
+		\item Compute 1st-step GMME $\hat{\theta}_W$ by some $W_n$
+			\[\hat{\theta}_W = arg \min_{\theta \in \Theta} \bar{g}(\theta)' W_n \bar{g}(\theta)\]
+		\item Compute $\hat{\Omega}$
+		\item Compute two-step GMME by estimated optimal weight $\hat{\Omega}^{-1}$
+			\[\hat{\theta}_{(2)} = arg\min_{\theta \in \Theta} \bar{g}(\theta)'\hat{\Omega}^{-1} \bar{g}(\theta)\]
+	\end{enumerate}
+	Note that :
+	\begin{enumerate}
+		\item $\hat{\theta}_{(2)}$ is asymptotically more efficient than $\hat{\theta}_W$
+		\item Step 2-3 may be repeated(called repeated GMM)
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM: Hypothesis testing}
+	In this part, we would discuss
+	\begin{enumerate}
+			\item Specification test
+			\item Parameter hypothesis
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM: Specification test}
+	Test validity of overidentified moment restrictions 
+	\[H_0 : E[g(w,\theta)] = 0 \ \ \text{for some} \theta \in \Theta\]
+	\[H_1 : E[g(w,\theta) \neq 0 \ \ \text{for all} \theta \in \Theta\]
+\end{frame}
+\begin{frame}{Test statistic}
+	Test statistic(called J-statistic)
+	\[J = n \bar{g}(\hat{\theta}) \hat{\Omega}^{-1} \bar{g}(\hat{\theta})\]
+	Intuition: If the model is correct, $\bar{g}(\hat{\theta})$ has to be close to zero and $J$ also has to be close to zero \\
+	Asymptotic distribution
+	\[J \rightarrow^d \mathcal{X}^2(dim g - dim \theta) \ \ \text{under} \ \ H_0\]
+	\[J \rightarrow^p 0 \ \ \text{under} \ \  H_1\]
+\end{frame}
+\begin{frame}{Test statistic:proof for linear case}
+	PS5
+\end{frame}
+\begin{frame}{Parameter hypothesis}
+	Parameter hypothesis 
+	\[H_0:r(\theta_0) = 0 \ \ \text{vs.} \ \ H_1: r(\theta_0) \neq 0\]
+	Recall that 
+	\[\sqrt{n} (\hat{\theta} - \theta_0) \rightarrow^d N(0,V)\]
+	where
+	\[V = (G' \Omega G)^{-1}\]
+\end{frame}
+\begin{frame}{$r(\hat{\theta})$ distribution: delta method}
+	By expanding $r(\hat{\theta}$ around $\hat{\theta} = \theta_0$
+		\[r(\hat{\theta}) = r(\theta_0) + \frac{\partial r(\tilde{\theta})}{\partial \theta'} (\hat{\theta} - \theta_0)\]
+		for some $\tilde{\theta} \in [\hat{\theta},\theta_0]$ and thus
+		\[\sqrt{n}(r(\hat{\theta}) - r(\theta_0)) \rightarrow^d N(0,R'VR)\]
+		where
+		\[R' = \frac{\partial r(\theta_0)}{\partial \theta'}\]
+\end{frame}
+\begin{frame}{Wald statistic}
+	Based on the asymptotic distribution of $r(\hat{\theta})$, we can use the Wald statistic 
+	\[W = nr(\hat{\theta})'[\hat{R}'\hat{V} \hat{R}]^{-1} r(\hat{\theta})\]
+	Asymptotic distribution
+	\[W \rightarrow^d \mathcal{X}^2(dim r) \ \ under \ \ H_0\]
+	\[W \rightarrow \infty \ \ under \ \ H_1\]
+\end{frame}
+\begin{frame}{GMM distance statistic}
+	We can also consider likelihood ratio type test \\
+	In thsi case, the GMM objective function
+	\[J(\theta) = n\bar{g}(\theta)' \hat{\Omega}^{-1} \bar{g}(\theta)\]
+	plays the role as likelihood function \\
+	GMM distance statistic
+	\[LR = J(\tilde{\theta}) - J(\hat{\theta})\]
+	Asymptotic distribution
+	\[LR \rightarrow^d \mathcal{X}^2(dim r) \ \ under \ \ H_0 \]
+	\[LR \rightarrow \infty \ \ under \ \ H_1 \]
+	Asymptotically equivalent to Wald statistic
+\end{frame}
+\begin{frame}{Interval estimation}
+	\begin{enumerate}
+		\item Wald-type(or t-value) confidence interval
+			\[CI_W = [\hat{\theta}^{(j)} - z_{\frac{\alpha}{2}} \sqrt{\frac{[\hat{V}]_{jj}}{n}}, \hat{\theta}^{(j)} +z_{\frac{\alpha}{2}} \sqrt{\frac{[\hat{V}]_{jj}}{n}}]\]
+			\item LR-type confidence interval
+				\[CI_{LR} = \{c: LR(c) \leq \mathcal{X}^2_{\alpha}(1)\}\]
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Wald vs. LR}
+	\begin{enumerate}
+		\item $CI_W$ is computationally cheaper than $CI_{LR}$
+		\item However the shape of $CI_{LR}$ is more flexible.
+		\item LR test is invariant to the functional form of nonlinear hypothesis $H_0:r(\theta_0) =0$ but Wald is not invariant(e.g. $r(\theta_0) = \theta^{(1)}_0 \theta^{(2)}_0 - 1$ and $r(\theta_0) = \theta^{(1)}_0 - \frac{1} {\theta^{(2)}_0})$.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{GMM:Conditional moment restriction}
+	So far, we consider unconditional moment restrictions
+	\[E[g(w_i,\theta_0)]=0\]
+	Example: Linear projection model
+	\[y_i = x'_i \theta_0 +e_i\]
+	\[E[x_ie_i] = 0\]
+which implies unconditional moment restriction
+\[E[g(w_i, \theta_0)] = E[x_i(y_i - x'_i \theta_0)] = 0\]
+\end{frame}
+\begin{frame}{GMM: GMM:Conditional moment restriction}
+	This model is just-identified and method of moments estimator is 
+	\[\hat{\theta} = (\sum^n_{i=1} x_i x'_i)^{-1} (\sum^n_{i=1} x_i y_i\]
+		which coincides with OLS estimator \\
+	By GMM theory, $\hat{\theta}$ is asymptotically semiparametric efficient regardless of heteroskedasticity.
+\end{frame}
+\begin{frame}{GLS estimator }
+	How about generalized least squares estimator? \\
+	Letting $\sigma^2_i = E[e^2_i|x_i]$, GLSE is 
+	\[\tilde{\theta}  = (\sum \sigma^{-2}_i x_i x'_i)^{-1} (\sum \sigma^{-2}_i x_i y_i)\]
+	\[ = \theta_0 + (\frac{1}{n} \sum \sigma^{-2}_i x_i x'_i)^{-1} (\frac{1}{n} \sum \sigma^{-2}_i x_i e_i)\]
+	\[\rightarrow^p \theta_0 + E[\sigma^{-2}_i x_i x'_i]^{-1} E[\sigma^{-2}_i x_i e_i]\]
+	In the projection model, we only assume $E[x_i e_i] =0$ which does not necessarily imply $E[\sigma^{-2}_i x_i e_i]=0$, therefore, GLSE may be inconsistent in the projection model.
+\end{frame}
+\begin{frame}{GMM: linear regression model}
+	Linear regression model
+	\[y_i = x'_i \theta_0 + e_i\]
+	\[E[e_i|x_i] = 0\]
+	This model implies conditional moment restriction which is stronger condition than unconditional moment restriction
+	\[E[h(w_i,\theta_0|x_i] = E[y_i-x'_i \theta_0|x_i] = 0\]
+\end{frame}
+\begin{frame}{GMM: linear regression model}
+	Conditional moment restriction $E[e_i|x_i]=0$ implies infinitely many unconditional moment restrictions in the form of $E[a(x_i)e_i]=0$ \\
+	Under $E[e_i|x_i]=0$, GLSE is consistent
+	therefore, we can write down the conditional moment restriction
+	\[E[h(w_i,\theta_0)|x_i]=0\]
+	For simplicity, assume dim$(h)=1$ \\
+	How can we estimate $\theta_o$ efficiently
+\end{frame}
+\begin{frame}{GMM: Conditional moment restrictions}
+	\[E[h(w_i,\theta_0)|x_i]=0 \]
+		imply
+		\[E[a(x_i) h(w_i,\theta_0)] =0 \ \ \text{for any } a(\cdot)\]
+	Based on unconditional moment restrictions, we can do GMM \\
+	Whcih $a(\cdot)$(also called intruments) should be chosen?
+\end{frame}
+\begin{frame}{Optimal instruments}
+	Pick some $a(\cdot)$. If assumptions for GMM are satisfied for the model $E[a(x_i) h(w_i,\theta_0)]=0$, asymptotic variance of GMME is 
+	\[asy.var(\hat{\theta}_a) = (G'_a \Omega^{-1}_a G_a)^{-1}\]
+	where
+	\[G_a = E[a(x_i) \frac{\partial h(w_i,\theta_0)}{\partial \theta'}\]
+		\[\Omega_a = E[a(x_i) a(x_i)' h(w_i,\theta_0)^2]\]
+		We choose $a(\cdot)$ to minimize asy.var($\hat{\theta}_a$) in positive semi-definite sense
+\end{frame}
+\begin{frame}{GMM: Optimal instruments}
+	\begin{thm}
+		For any $a(\cdots)$, it holds
+		\[(G'_a \Omega^{-1}_a G_a)^{-1} \geq (G'_* \Omega^{-1} G_*)^{-1}\]
+		Where
+		\[a^*(x_i) = E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i]E[h(w_i,\theta_0)^2|x_i]^{-1}\]
+		$a^*(x_i)$ is called optimal IV
+	\end{thm}
+\end{frame}
+\begin{frame}{GMM: Optimal instruments proof}
+	Pick any $a(\cdot)$. Let 
+	\[h_i = h(w_i,\theta_0)\]
+	\[a_i = a(x_i)\]
+	\[H_i = E[\frac{\partial h(w_i,\theta_0)}{\partial \theta'}|x_i]\]
+	\[V_i = E[h(w_i,\theta_0)^2|x_i]\]
+	Then
+	\[V^{-1}_a = G'_a \Omega^{-1}_a G_a = E[a_i H_i]' E[a_i V_i a'_i]^{-1} E[a_i H_i]\]
+	\[V^{-1}_* = G'_* \Omega^{-1}_{*} G_* = E[a^{*}_i H_i]' E[a^{*}_i H_i] E[a^{*}_i V_i a^{*'}_i]^{-1}E[a^{*}_i H_i]\]
+	\[E[H'_i V^{-1}_i H_i]\]
+\end{frame}
+\begin{frame}{GMM: Optimal instruments proof}
+	Now define
+	\[m_i = G'_a \Omega^{-1}_a a_i h_i\]
+	\[m^*_i = a^*_i h_i\]
+	Then 
+	\[E[m_i m'_i] = G'_a \Omega^{-1}_a G_a = V^{-1}_a\]
+	\[E[m^*_i m^{*'}_i] = E[a^*_i V_i a^{*'}_i] = V^{-1}_*\]
+	\[E[m_i m^{*'}_i ] = G'_a \Omega^{-1}_a E[a_i V_i a^{*'}_i] = V^{-1}_a\]
+\end{frame}
+\begin{frame}{GMM: Optimal instruments proof}
+	Therefore, the difference in variance is written as
+	\[V_a - V_* \]
+	\[= V_aV^{-1}_aV_a - V_*\]
+	\[E[m_i m^{*'}_i ]^{-1} E[m_i m'_i]E[m^{*_i} m'_i ]^{-1} - E[m^*_im^{*'}_i]^{-1}\]
+	\[E[RR']\]
+	\[\geq 0\]
+	where
+	\[R =E[m_i m^{*'}_i ]^{-1} \{m_i - E[m_i m^{*'}_i ] E[m_i m^{*'}_i ]^{-1} m^*_i\}\]
+\end{frame}
+\begin{frame}{GMM: Optimal IV estimator}
+	Optimal IV is 
+	\[a^*(x_i) = E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i] E[h(w_i,\theta_0)^2|x_i]^{-1}\]
+	Note that 
+	\[dim(a^*(x_i)) = dim(\theta)\]
+	Thus optimal IV estimator is defined as method of moments estimator
+	\[\frac{1}{n} \sum^n_{i=1} a^*(x_i)h(w_i,\hat{\theta}_*) = 0\]
+\end{frame}
+\begin{frame}{GMM: Optimal IV estimator}
+	Suppose the GMM assumptions hold true then 
+	\[\sqrt{n}(\hat{\theta}_* 0 \theta_0) \rightarrow^d N(0,V_*)\]
+	where
+	\[V_* = E[E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i] E[h(w_i,\theta_0)^2|x_i]^{-1} E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i] ]^{-1}\]
+	and $\hat{\theta}_*$ is asympototically semiparametric efficient for conditional moment restriction model.
+\end{frame}
+\begin{frame}{GMM: Optimal IV estimator}
+	Since optimal IV is unknown, the optimal IV estimator is infeasible. \\
+	To estimate $a^*(x_i)$, we need to estimate conditional moments
+	\[E[\frac{\partial h(w_i,\theta_0)}{\partial \theta}|x_i]\]
+	and
+	\[E[h(w_i,\theta_0)^2|x_i]\]
+	There are estimated by nonparametric regression, e.g. kernel regression.
+\end{frame}
+\begin{frame}{GMM: feasible IV estimator}
+	\begin{enumerate}
+		\item For each $c$, $a^*(c)$ is nonparametrically estimated , we can compute $\hat{a}(x_1) \cdots \hat{a}(x_n)$
+		\item Feauble optimal IV estimator solves
+			\[\frac{1}{b} \sum^n_{i=1} \hat{a}^*(x_i)h(w_i,\tilde{\theta}_*)=0\]
+	\end{enumerate}
+	$\tilde{\theta}$ is asymptotically equivalent to infeasible version $\hat{\theta}_*$
+\end{frame}
+\begin{frame}{Optimal IV: Linear regress model}
+	\[a^*(x_i) = -x_iE[e^2_i|x_i]^{-1}\]
+	\[= -\sigma^{-2}_i x_i\]
+	Optimal IV GMME solves
+	\[0 = \frac{1}{n} \sum^n_{i=1} a^*(x_i) h(w_i,\hat{\theta}_*)\]
+	Thus
+	\[\hat{\theta}_* = (\sum^n_{i=1} \sigma^{-2}_i x_ix'_i)^{-1}(\sum^n_{i=1} \sigma^{-2}_i x_i y_i)\]
+\end{frame}
+\end{document}
