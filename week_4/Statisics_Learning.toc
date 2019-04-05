@@ -1,0 +1,4 @@
+\select@language {english}
+\beamer@sectionintoc {1}{Review of PAC Model}{2}{0}{1}
+\beamer@sectionintoc {2}{General PAC with finite class}{3}{0}{2}
+\beamer@sectionintoc {3}{The No free lunch theorem}{12}{0}{3}

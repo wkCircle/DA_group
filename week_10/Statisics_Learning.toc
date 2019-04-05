@@ -1,0 +1,4 @@
+\select@language {english}
+\beamer@sectionintoc {1}{GLS estimator}{2}{0}{1}
+\beamer@sectionintoc {2}{Solution of last week}{6}{0}{2}
+\beamer@sectionintoc {3}{GMM}{22}{0}{3}

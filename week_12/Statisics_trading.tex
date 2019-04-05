@@ -1,0 +1,95 @@
+\documentclass{beamer} 
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{default}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[ruled,longend]{algorithm2e}
+\newtheorem*{dfn}{Definition}
+\newtheorem{thm}{Theorem}[subsection]
+ \renewcommand{\thethm}{\arabic{thm}}
+%\newtheorem{lemma}{Lemma}
+\title[Introduction]{Statistics Trading:Distance approach Part 1}
+\author{}
+\institute{}
+\date{2019.03.30}
+ 
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+\section{GGR}
+\begin{frame}{Gatev, Goetzmann and Rouwenhorst}
+	\begin{enumerate}
+		\item Their study performed on all liquid U.S. stocks from the CRSP daily files from 1962 to 2002. First 
+		\item A cumulative total return $P_{it}$ is constructed for each stock $i$ and normalized to the first day of a 12 months formation period.
+		\item With n stocks under consideration, the sum of Euclidean square distance(SSD) for the price time series of $n(n-1)/2$ is calculated 
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Gatev, Goetzmann and Rouwenhorst}
+	Implementation:
+	\begin{enumerate}
+		\item Select the top 20 pairs with minimum historic distance metric are considered in a subsequent six months trading period. Prices are normalized again to the first day of the trading period.
+		\item Trades are opened when the spread diverges by more than two historical standard deviation $\sigma$ ad closed upon mean reversion, at the end of trading period, or upon delisting.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Gatev, Goetzmann and Rouwenhorst}
+	The advantage of GGR method
+	\begin{enumerate}
+		\item The methodology is relatively clear.
+		\item Easy to implement
+		\item Robust to data snooping 
+	\end{enumerate}
+	The disadvantage of GGR method
+	\begin{enumerate}
+		\item The choice of Euclidean squared distance for identifying pairs is analytically suboptimal.
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Gatev, Goetzmann and Rouwenhorst}
+	The idea measure should be able to identify the pair with
+	\begin{enumerate}
+			\item The spread should exhibit high variance 
+			\item The spread should be strongly mean-reverting.
+	\end{enumerate}
+	These two attributes generate a high number of round trip trades with high profits per trade.
+\end{frame}
+\begin{frame}{Spread Variance}
+	Empirical spread variance $V(P_{it} - P_{jt})$ can be expressed as follows:
+	\[V(P_{it} - P_{jt}) = \frac{1}{T} \sum^T_{t=1}(P_{it} - P_{jt})^2 - (\frac{1}{T} \sum^T_{t=1}(P_{it} - P_{jt}))^2\]
+	We can solve the average sum of squared distances for the formation period:
+	\[\bar{SSD_{ijt} } = \frac{1}{T} \sum^{T}_{t=1} (P_{it} - P_{jt})^2 = V(P_{it} - P_{jt}) + (\frac{1}{T} \sum^T_{t=1}(P_{it} - P_{jt}))^2\]
+\end{frame}
+\begin{frame}{Spread Variance}
+	First of all, it is trivial to see that an ideal pair in the sense of GGR with zero squared distance has a spread of zero and thus produces no profits. \\
+	The decomposition of SSD shows that there are two effects influence ranking of GGR. \\
+\end{frame}
+\begin{frame}{Mean reversion}
+	GGR interpret the pairs price time series as cointegrated in the sense of Bossaerts(1988). \\
+	However, GGR perform no cointegration testing on their indentified pairs. As such, the high correlation may well be spurious, since high correlation is not related to a cointegration relationship.
+\end{frame}
+\begin{frame}{better selection measure}
+	\begin{enumerate}
+		\item pairs exhibiting the lowers drift in spread mean should be identified.
+		\item of these pair, the ones with the highest spread variance are retained and tested for cointegration while controlling the familywise error rate as in Cummins and Bucca(2012).
+	\end{enumerate}
+\end{frame}
+\end{document}

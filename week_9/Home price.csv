@@ -1,0 +1,79 @@
+Name,Description,Type,Segment,Expectation,Conclusion,Comments
+SalePrice,the property's sale price in dollars.,N,,,,預測目標，房子的售價
+MSSubClass,The building class,C,building,1,,年齡與屋子狀態做分類，沒有ranking關係
+MSZoning,The general zoning classification,C,location,3,,分為農業區、商業區、住宅區高密度、住宅區低密度等。
+LotFrontage,Linear feet of street connected to property,N,location,2,,應該是到最近的街的距離
+LotArea,Lot size in square feet,N,space,3,,地基大小
+Street,Type of road access,C,location,1,,路的材質
+Alley,Type of alley access,C,location,1,,走道材質
+LotShape,General shape of property,C,space,2,,地基形狀
+LandContour,Flatness of the property,C,space,2,,地基平坦程度
+LotConfig,Lot configuration,C,space,2,,格局
+Neighborhood,Physical locations within Ames city limits,C,location,3,,區 像是中正區blabla
+Condition1,Proximity to main road or railroad,C,location,3,,附近的大路
+Condition2,Proximity to main road or railroad (if a second is present),C,location,2,,附近的大路(如果鄰近靠近一條以上的大路)
+BldgType,Type of dwelling,C,building,2,,房內的格局，有可能MSSUbclass部份資訊重疊
+HouseStyle,Style of dwelling,C,building,2,,房內的格局，比如幾層樓
+OverallQual,Overall material and finish quality,C,building,2,,整體建材等品質優劣，Ranking data
+OverallCond,Overall condition rating,C,building,2,,整體房屋狀況，Ranking data
+YearBuilt,Original construction date,N,building,2,,建造年份
+YearRemodAdd,Remodel date,N,building,2,,重整年份
+RoofStyle,Type of roof,C,building,1,,屋頂型態，像是:Flat ...
+RoofMatl,Roof material,C,building,1,,屋頂材質
+Exterior1st,Exterior covering on house,C,building,1,,屋外牆的材質，例如 brick
+Exterior2nd,Exterior covering on house (if more than one material),C,building,1,,屋外牆的材質，如果多於一個種類的話，第二種類的材質
+MasVnrType,Masonry veneer type,C,building,1,,砌體貼面種類，石板類型
+MasVnrArea,Masonry veneer area in square feet,N,building,1,,砌體貼面面積，石板大小 ranking
+ExterQual,Exterior material quality,C,building,1,,外部材質品質 raniking
+ExterCond,Present condition of the material on the exterior,C,building,1,,外部材質目前狀況
+Foundation,Type of foundation,C,building,1,,"ex: brick ,stone"
+BsmtQual,Height of the basement,C,building,1,,地下室高度
+BsmtCond,General condition of the basement,C,building,1,,地下室狀況
+BsmtExposure,Walkout or garden level basement walls,C,building,1,,庭院外牆對外的曝露程度
+BsmtFinType1,Quality of basement finished area,C,building,1,,地下室品質
+BsmtFinSF1,Type 1 finished square feet,N,space,1,,(地下室)Type1完成的大小
+BsmtFinType2, Quality of second finished area (if present),C,building,1,,(地下室)第二完成區的品質
+BsmtFinSF2,Type 2 finished square feet,N,space,1,,(地下室)Type2完成的大小
+BsmtUnfSF,Unfinished square feet of basement area,N,space,1,,地下室未完成的區域大小
+TotalBsmtSF,Total square feet of basement area,N,space,1,,整個地下室的區域大小
+Heating,Type of heating,C,building,1,,暖器種類
+HeatingQC,Heating quality and condition,C,building,1,,暖器品質和狀況
+CentralAir,Central air conditioning,C,building,1,,中央空調
+Electrical, Electrical system,C,building,1,,用電系統
+1stFlrSF,First Floor square feet,N,space,2,,第一層樓的面積
+2ndFlrSF,Second floor square feet,N,space,2,,第二層樓的面積
+LowQualFinSF,Low quality finished square feet (all floors),N,space,1,,整棟樓低品質的部分面積
+GrLivArea,Above grade (ground) living area square feet,N,space,1,,居住區域高品質的部分面積
+BsmtFullBath,Basement full bathrooms,N,building,1,,地下室的Full浴室
+BsmtHalfBath,Basement half bathrooms,N,building,1,,地下室的Half浴室
+FullBath,Full bathrooms above grade,N,building,1,,Full浴室高於平均品質的數量
+HalfBath, Half baths above grade,N,building,1,,Half浴室高於平均品質的數量
+BedroomAbvGr,Number of bedrooms above basement level,N,building,1,,優於地下室的房間數量
+KitchenAbvGr,Number of kitchens,N,building,1,,廚房數量
+KitchenQual,Kitchen quality,C,building,2,,廚房品質
+TotRmsAbvGrd,Total rooms above grade (does not include bathrooms,N,building,1,,整體房間高於平均品質的數量(不含浴室)
+Functional,Home functionality rating,C,building,2,,居家功能評鑑
+Fireplaces,Number of fireplaces,N,space,1,,壁爐數量
+FireplaceQu,Fireplace quality,C,building,1,,壁爐品質
+GarageType,Garage location,C,space,2,,車庫位置
+GarageYrBlt,Year garage was built,N,building,1,,車庫建置年份
+GarageFinish,Interior finish of the garage,C,building,1,,車庫內部建置是否完成
+GarageCars,Size of garage in car capacity,N,space,2,,車庫可停幾輛車
+GarageArea,Size of garage in square feet,N,space,2,,車庫大小
+GarageQual, Garage quality,C,building,1,,車庫品質
+GarageCond,Garage condition,C,building,1,,車庫狀況
+PavedDrive,Paved driveway,C,building,1,,車道有沒鋪
+WoodDeckSF, Wood deck area in square feet,N,space,2,,露天平臺面積大小
+OpenPorchSF,Open porch area in square feet,N,space,2,,門廊開放區面積大小
+EnclosedPorch,Enclosed porch area in square feet,N,space,2,,門廊封閉區面積大小
+3SsnPorch,Three season porch area in square feet,N,space,2,,隔出來的門廊區的面積大小
+ScreenPorch,Screen porch area in square feet,N,space,2,,陽台
+PoolArea,Pool area in square feet,N,space,2,,游泳池
+PoolQC,Pool quality Fence: Fence quality,C,space,1,,游泳池藩籬的品質
+MiscFeature,Miscellaneous feature not covered in other categories,C,building,2,,有沒有網球場、電梯等等
+MiscVal,$Value of miscellaneous feature,N,building,1,,其他雜項
+MoSold,Month Sold,N,sale,1,,賣出月份
+YrSold, Year Sold,N,sale,2,,賣出年分
+Fence,Fence quality,C,building,1,,藩籬品質
+SaleCondition,Condition of sale,C,sale,2,,銷售狀況
+SaleType,Type of sale,C,sale,2,,銷售型態

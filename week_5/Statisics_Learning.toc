@@ -1,0 +1,3 @@
+\select@language {english}
+\beamer@sectionintoc {1}{VC-Dimension}{2}{0}{1}
+\beamer@sectionintoc {2}{Linear Predictor}{14}{0}{2}

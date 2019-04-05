@@ -1,0 +1,21 @@
+
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[ruled,longend]{algorithm2e}
+\begin{document}
+\begin{algorithm}
+  $K \gets \text{Set of channels}$\;
+  $C(v) \gets 0,\forall v \in V$\;
+  $\text{root} \gets \text{Root Selection}(V)$\;
+  $C(\text{root}) \gets \text{Channel Selection}(\text{root},K)$\;
+  $\text{Permutate}(V,\text{root})$\;
+  \While{$V \neq \emptyset$}
+  {
+    $v \gets \text{Removehead}(V)$\;
+    $C(v) \gets \text{Channel Selection}(v,K)$\;
+    $V \gets V-1$\;
+  }
+  \KwRet{$C$}\;
+  \caption{Channel Assignment using Random Ordering (RO)}
+\end{algorithm}
+\end{document}
