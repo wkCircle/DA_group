@@ -146,4 +146,17 @@ Therefore
 		\[E[f(\bar{w})] - f(w^*) \leq \frac{b \rho}{\sqrt{T}}\]
 	\end{thm}
 \end{frame}
+\begin{frame}{Gradient Descent}
+	\begin{algorithm}[H]
+		$Goal:Find \ \ arg\min_x f(x)$ \\
+		$Input: \gets \text{Scalar} \ \  \eta>0, \text{integer} T>0$ \;
+		$Initialize: \gets w^{(1)} = (0,0,\cdots,0)$\;
+		\For{$t = 1,2, \cdots T$}
+		{   
+			update			$w^{(t+1)} = w^{(t)} - \eta \nabla f(w^t)$\;
+							}
+	$Output: \bar{w} = \frac{1}{T} \sum^{T}_{t=1} w^{(t)}$
+	\caption{Gradient Descent(GD)}
+	\end{algorithm}
+\end{frame}
 \end{document}
