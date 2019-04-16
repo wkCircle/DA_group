@@ -1,12 +1,12 @@
 ## Self-access Data Analysis Study Group
-Welcome to our study group! Our main purpose is to learn together and share knowledge of data analysis wihtin members. </ br>
-We'll have different topics each week. Every member take turns to be a speaker at a certain week. </ br>
-To see our weekly topics, please scroll down and refer to the `Weekly Materials List` section. </br>
-Notice that the hyperlinks listed in that section won't guid you to the corresponding folder but external relevant websties. </br>
-Any corrections and suggestions are wellcomed from any readers! </ br>
+Welcome to our study group! Our main purpose is to learn together and share knowledge of data analysis wihtin members. <br />
+We'll have different topics each week. Every member take turns to be a speaker at a certain week. <br />
+To see our weekly topics, please scroll down and refer to the `Weekly Materials List` section. <br />
+Notice that the hyperlinks listed in that section won't guid you to the corresponding folder but external relevant websties. <br />
+Any corrections and suggestions are wellcomed from any readers! <br />
 
 ## Environment
-Environment requirement may differ according to different topics each week. </ br>
+Environment requirement may differ according to different topics each week. <br />
 However, `python3.5` or above and `jupyter notebook` are a must since our main compiling language is python saved as `.ipynb` files.
 
 ## Weekly Materials List
