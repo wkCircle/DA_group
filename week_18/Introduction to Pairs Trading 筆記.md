@@ -6,6 +6,21 @@
 
 要判斷那些資產有相似走勢，我們必須有一些共整合(cointegration)以及定態(stationary)時間序列的知識，讓我們看看以下的解釋。
 
+我們先載入相關的套件庫
+
+```python
+import numpy as np
+import pandas as pd
+
+import statsmodels
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import coint, adfuller
+
+import matplotlib.pyplot as plt
+```
+
+然後我們定義一個函數
+
 ```python
 def generate_datapoint(params):
     mu = params[0]
@@ -13,9 +28,13 @@ def generate_datapoint(params):
     return np.random.normal(mu, sigma)
 ```
 
+這個函數作用是產生隨機數，這個函數最後會回傳一個常態分配的實現，這個函數接受一個像列表的輸入，第一個參數決定回傳常態分配的期望值，第二個決定這個分配的變異數。
+
 下面我們用程式生成兩個時間序列。
 
 ## Series A
+
+第一個時間序列產生100個隨機數(常態分配(0,1))，並存入A這個series裡面，並將其畫出。
 
 ```python
 # Set the parameters and the number of datapoints
@@ -37,6 +56,8 @@ plt.legend(['Series A']);
 ![](/home/qin/workspace/DA_group/week_18/p1.png)
 
 ## Series B
+
+第二個數列，我們加入時間趨勢，期常態分配期望值參數為$t \times 0.1$ ，代表當時間增大，其抽出來的數平均更大，期數列有向上跑得趨勢。
 
 ```python
 # Set the number of datapoints
@@ -61,6 +82,16 @@ plt.legend(['Series B']);
 
 ## Testing for Stationarity
 
+我們先回憶一下stationary 數列的定義(weak version)
+
+A time random process $\{X_t\}$ is weak sense stationarity has the following restrictions on its mean function $m_x(t) = E[x_t]$ and autocovariance function $K_{XX} (t_1,t_2) = E[(X_{t_1} - m_X(t_1))(X_{t_2} - m_X(t_2))]$:
+
+- $m_X(t) = m_X(t + \tau)$ for all $\tau \in R$
+- $K_{XX}(t_1,t_2) = K_{XX}(t_1-t_2,0)$ for all $t_1,t_2 \in R$
+- $E[|X(t)|^2] < \infty$
+
+簡單來說，其產生的資料點的分配滿足平均隨時間不變，與相關結構只與時間差有關兩項特性。而常用用來檢測數列是否為定態數列的檢定方法為單根檢定，下面我們引用statsmodel裡面寫好的單跟檢定來進行檢定。
+
 ```python
 def check_for_stationarity(X, cutoff=0.01):
     # H_0 in adfuller is unit root exists (non-stationary)
@@ -79,45 +110,21 @@ check_for_stationarity(A);
 check_for_stationarity(B);
 ```
 
- 讓我們嘗試一個可能更微妙的例子。
-
-## Series C
-
-```python
-# Set the number of datapoints
-T = 100
-
-C = pd.Series(index=range(T))
-C.name = 'C'
-
-for t in range(T):
-    # Now the parameters are dependent on time
-    # Specifically, the mean of the series changes over time
-    params = (np.sin(t), 1)
-    C[t] = generate_datapoint(params)
-
-plt.plot(C)
-plt.xlabel('Time')
-plt.ylabel('Value')
-plt.legend(['Series C']);
-```
-
-```python
-check_for_stationarity(C);
-```
-
-![](/home/qin/workspace/DA_group/week_18/p3.png)
-
 ## Cointegration
 
-**定義1**:我們將定態時間序列稱為零階整合(integrated of order zero)序列，簡稱$I(0)$，如果一個序列經過一階差分後為定態，則稱此序列為$I(1)​$
+回顧完怎麼檢定定態隨機序列，我們學習怎麼定義共整合數列。
+
+**定義1**:我們將定態時間序列稱為零階整合(integrated of order zero)序列，簡稱$I(0)$，如果一個序列經過一階差分後為定態，則稱此序列為$I(1)$
 
 **定義2**： For a set of the time series $(X_1,X_2, \cdots, X_k)$, if all series are $I(1)$, and some linear combination of them is $I(0)$, we say the set of time series is cointegrated
+
+簡單來說，兩數列本身都不定態數列，但是在某種線性組合後會變成定態數列，我們就稱這組數列為共正和數列，這可以理解這組數列有某種長期均衡關係。
+
+讓我們產生一個共整合數列。
 
 ```python
 # Length of series
 N = 100
-
 # Generate a stationary random X1
 X1 = np.random.normal(0, 1, N)
 # Integrate it to make it I(1)
@@ -129,6 +136,8 @@ X1.name = 'X1'
 X2 = X1 + np.random.normal(0, 1, N)
 X2.name = 'X2'
 ```
+
+可以看到$X_2$是$X_1$加白噪音
 
 ```python
 plt.plot(X1)
@@ -149,7 +158,7 @@ check_for_stationarity(Z);
 
 ## Testing for Cointegration
 
-一般來說，我們使用 $X_2$對$X_1$先去跑回歸
+一般來說，我們使用 $X_2$對$X_1​$先去跑回歸
 
 $X_2 = \alpha + \beta X_1 + \varepsilon$
 
@@ -199,6 +208,8 @@ coint(X1, X2)
 ```
 
 ## Section 2 Pair Trading
+
+在這邊，我們想要找到一對資產，利用它們價格有一個長期的關係進行套利，而用來檢定一對資產是否有長期關係的工具就是正整合檢定。
 
 我們底下先虛擬一個pair trading的例子
 
@@ -345,7 +356,7 @@ plt.axhline(ratio.mean(), color='black')
 plt.legend(['Price Ratio']);
 ```
 
-通常使用標準化後的數據效果更好
+為了妥善定義我們的策略，我們先把數列進行標準化。
 
 ```python
 
@@ -399,7 +410,11 @@ plt.plot(spread_mavg30.index, spread_mavg30.values)
 plt.legend(['1 Day Spread MAVG', '30 Day Spread MAVG'])
 
 plt.ylabel('Spread');
+```
 
+
+
+```python
 # Take a rolling 30 day standard deviation
 std_30 = pd.rolling_std(spread, window=30)
 std_30.name = 'std 30d'
