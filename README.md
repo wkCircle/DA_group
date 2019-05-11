@@ -27,8 +27,8 @@ Following links will guide you to outside websites that are relevant to the topi
 > - **Week 14** - [Deep leanring with PyTorch: A 60 mins blitz](https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html)
 > - **Week 15** - **Quantopian Getting Started**
 > - **Week 16** - **Quantopian Getting Started & Long Short Strategy & Financial Econometrics**
-> - **Week 17** -
-> - **Week 18** -
+> - **Week 17** - **Quantopian Getting Started**
+> - **Week 18** - **Basic Pairs Trading**
 > - **Week 19** -
 > - **Week 20** -
 > - **Week 21** -
@@ -38,3 +38,5 @@ Following links will guide you to outside websites that are relevant to the topi
 - [Pytorch Official Tutorial Website](https://pytorch.org/tutorials/)
 - [Quantopian Official Tutorial Website](https://www.quantopian.com/tutorials)
 - [Quantopian Help](https://www.quantopian.com/help)
+- [Hansen's Econometrics note](https://www.ssc.wisc.edu/~bhansen/econometrics/)
+
